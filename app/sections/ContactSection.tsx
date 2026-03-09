@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
 import { personalInfo } from "../data/portfolio-data";
-import { Mail, Github, Linkedin, Send, ArrowUpRight } from "lucide-react";
+import { Mail, Github, Linkedin, Send, ArrowUpRight, CheckCircle, AlertCircle } from "lucide-react";
 
 const socialLinks = [
   { icon: <Mail size={20} />, label: "Email", href: `mailto:${personalInfo.email}`, display: personalInfo.email },
@@ -13,10 +13,35 @@ const socialLinks = [
 ];
 
 export default function ContactSection() {
-  const [formState, setFormState] = useState({ name: "", email: "", message: "" });
+  const [formData, setFormData] = useState({ from_name: "", from_email: "", message: "" });
+  const [sending, setSending] = useState(false);
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormState({ ...formState, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSending(true);
+    setStatus("idle");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) throw new Error();
+      setStatus("success");
+      setFormData({ from_name: "", from_email: "", message: "" });
+    } catch {
+      setStatus("error");
+    } finally {
+      setSending(false);
+      setTimeout(() => setStatus("idle"), 5000);
+    }
   };
 
   return (
@@ -34,7 +59,7 @@ export default function ContactSection() {
           <p className="text-xs font-mono tracking-[0.3em] uppercase mb-3" style={{ color: "var(--accent)" }}>
             Contact
           </p>
-          <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-4">
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-4">
             <span className="gradient-text">Let&apos;s build the</span>
             <br />
             <span className="gradient-text">future</span>
@@ -50,10 +75,7 @@ export default function ContactSection() {
           <AnimateOnScroll delay={0.1}>
             <form
               className="glass-card-static p-8 md:p-10 space-y-5"
-              onSubmit={(e) => {
-                e.preventDefault();
-                window.location.href = `mailto:${personalInfo.email}?subject=Portfolio Contact from ${formState.name}&body=${formState.message}%0A%0AFrom: ${formState.email}`;
-              }}
+              onSubmit={handleSubmit}
             >
               <div>
                 <label className="block text-xs font-mono tracking-wider uppercase mb-2" style={{ color: "var(--text-muted)" }}>
@@ -61,8 +83,8 @@ export default function ContactSection() {
                 </label>
                 <input
                   type="text"
-                  name="name"
-                  value={formState.name}
+                  name="from_name"
+                  value={formData.from_name}
                   onChange={handleChange}
                   placeholder="Your name"
                   className="form-input"
@@ -75,8 +97,8 @@ export default function ContactSection() {
                 </label>
                 <input
                   type="email"
-                  name="email"
-                  value={formState.email}
+                  name="from_email"
+                  value={formData.from_email}
                   onChange={handleChange}
                   placeholder="your@email.com"
                   className="form-input"
@@ -89,7 +111,7 @@ export default function ContactSection() {
                 </label>
                 <textarea
                   name="message"
-                  value={formState.message}
+                  value={formData.message}
                   onChange={handleChange}
                   placeholder="Tell me about your project..."
                   rows={5}
@@ -97,15 +119,42 @@ export default function ContactSection() {
                   required
                 />
               </div>
+
               <motion.button
                 type="submit"
                 className="form-button w-full flex items-center justify-center gap-2"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                disabled={sending}
+                style={{ opacity: sending ? 0.7 : 1 }}
               >
-                <Send size={16} />
-                Send Message
+                {sending ? (
+                  <>Sending...</>
+                ) : (
+                  <><Send size={16} /> Send Message</>
+                )}
               </motion.button>
+
+              {status === "success" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center gap-2 text-sm font-medium p-3 rounded-xl"
+                  style={{ background: "rgba(45, 212, 191, 0.1)", color: "var(--accent)" }}
+                >
+                  <CheckCircle size={16} /> Message sent successfully! I&apos;ll get back to you soon.
+                </motion.div>
+              )}
+              {status === "error" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center gap-2 text-sm font-medium p-3 rounded-xl"
+                  style={{ background: "rgba(239, 68, 68, 0.1)", color: "#ef4444" }}
+                >
+                  <AlertCircle size={16} /> Failed to send. Please try emailing directly.
+                </motion.div>
+              )}
             </form>
           </AnimateOnScroll>
 
@@ -146,7 +195,6 @@ export default function ContactSection() {
                 </motion.a>
               ))}
 
-              {/* Quick CTA */}
               <div className="mt-8 pt-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                 <a
                   href={`mailto:${personalInfo.email}`}
