@@ -50,10 +50,10 @@ export default function HeroSection() {
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* Hero content — text left, photo right */}
-      <div className="relative z-10 max-w-6xl w-full flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20">
+      {/* Hero content — text left (or centered), photo right */}
+      <div className={`relative z-10 w-full flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20 ${photoVisible ? 'max-w-6xl' : 'max-w-4xl justify-center'}`}>
         {/* Text Column */}
-        <div className="flex-1 text-center md:text-left">
+        <div className={`flex-1 ${photoVisible ? 'text-center md:text-left' : 'text-center flex flex-col items-center'}`}>
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -101,7 +101,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.9 }}
-            className="mt-10 flex flex-wrap gap-4 justify-center md:justify-start"
+            className={`mt-10 flex flex-wrap gap-4 ${photoVisible ? 'justify-center md:justify-start' : 'justify-center'}`}
           >
             <a href="#projects" className="form-button inline-flex items-center gap-2">
               View Projects
@@ -165,7 +165,7 @@ export default function HeroSection() {
             className="flex-shrink-0"
           >
             <div
-              className="relative w-48 h-48 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-3xl overflow-hidden"
+              className="relative w-56 h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full overflow-hidden"
               style={{
                 border: "3px solid var(--accent)",
                 boxShadow: "0 0 60px var(--accent-glow), 0 0 120px var(--accent-dim)",
