@@ -136,6 +136,30 @@ export const experience = {
   tech: ["Next.js", "Tailwind CSS", "Firebase", "NodeMailer"],
 };
 
+export const education = [
+  {
+    institution: "Lovely Professional University",
+    location: "Punjab, India",
+    degree: "B.Tech in Computer Science & Engineering",
+    score: "CGPA: 8.72",
+    period: "Aug '23 – Present",
+  },
+  {
+    institution: "G.A.V Sr. Sec. School",
+    location: "Kangra, Himachal Pradesh",
+    degree: "Intermediate",
+    score: "Percentage: 83%",
+    period: "Apr '22 – Mar '23",
+  },
+  {
+    institution: "M.V.M Public High School",
+    location: "Kangra, Himachal Pradesh",
+    degree: "Matriculation",
+    score: "Percentage: 96%",
+    period: "Apr '20 – Mar '21",
+  },
+];
+
 export const achievements = [
   {
     title: "NASA Space Apps Challenge",

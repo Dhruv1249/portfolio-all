@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, FileText } from "lucide-react";
+import { Menu, X, FileText, Palette, Check } from "lucide-react";
 import { personalInfo } from "../data/portfolio-data";
+import { useTheme, COLOR_PROFILES } from "../contexts/ThemeContext";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -16,11 +17,25 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [themeOpen, setThemeOpen] = useState(false);
+  const themeRef = useRef<HTMLDivElement>(null);
+  const { activeProfile, setProfile } = useTheme();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Close theme dropdown on click outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (themeRef.current && !themeRef.current.contains(e.target as Node)) {
+        setThemeOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   return (
@@ -69,16 +84,94 @@ export default function Navbar() {
           >
             <FileText size={13} /> Resume
           </motion.a>
+
+          {/* Theme Selector */}
+          <div ref={themeRef} style={{ position: "relative" }}>
+            <motion.button
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8 }}
+              onClick={() => setThemeOpen(!themeOpen)}
+              className="text-xs font-medium uppercase tracking-[0.15em] inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-[var(--accent)]"
+              style={{ color: "var(--text-muted)", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit" }}
+            >
+              <Palette size={13} /> Theme
+            </motion.button>
+
+            <AnimatePresence>
+              {themeOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  style={{
+                    position: "absolute",
+                    top: "calc(100% + 12px)",
+                    right: 0,
+                    width: "280px",
+                    background: "var(--bg-secondary)",
+                    border: "1px solid var(--border-subtle)",
+                    borderRadius: "16px",
+                    padding: "12px",
+                    boxShadow: "0 24px 64px rgba(0,0,0,0.5)",
+                    backdropFilter: "blur(20px)",
+                    zIndex: 100,
+                  }}
+                >
+                  <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "8px", padding: "0 4px" }}>
+                    Color Profile
+                  </p>
+                  {COLOR_PROFILES.map((profile) => {
+                    const isActive = activeProfile.id === profile.id;
+                    return (
+                      <div
+                        key={profile.id}
+                        onClick={() => {
+                          setProfile(profile.id);
+                          setThemeOpen(false);
+                        }}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: "10px 12px",
+                          borderRadius: "10px",
+                          cursor: "pointer",
+                          background: isActive ? "var(--accent-dim)" : "transparent",
+                          transition: "background 0.2s",
+                          marginBottom: "2px",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                          <div style={{ display: "flex", gap: "3px" }}>
+                            {profile.preview.slice(0, 2).map((color, i) => (
+                              <div key={i} style={{ width: "16px", height: "16px", borderRadius: "4px", background: color, border: "1px solid rgba(255,255,255,0.1)" }} />
+                            ))}
+                          </div>
+                          <span style={{ fontSize: "13px", fontWeight: 500, color: isActive ? "var(--accent)" : "var(--text-secondary)" }}>
+                            {profile.name}
+                          </span>
+                        </div>
+                        {isActive && <Check size={14} style={{ color: "var(--accent)" }} />}
+                      </div>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <motion.a
             href="#contact"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.8 }}
+            transition={{ delay: 0.85 }}
             className="text-xs font-semibold uppercase tracking-wider px-5 py-2.5 rounded-xl transition-all duration-300"
             style={{
               background: "var(--accent-dim)",
               color: "var(--accent)",
-              border: "1px solid rgba(45, 212, 191, 0.2)",
+              border: "1px solid var(--accent-glow)",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = "var(--accent)";
@@ -151,6 +244,45 @@ export default function Navbar() {
               >
                 <FileText size={14} /> Resume
               </motion.a>
+
+              {/* Mobile Theme Selector */}
+              <div style={{ marginTop: "8px", paddingTop: "16px", borderTop: "1px solid var(--border-subtle)" }}>
+                <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "12px" }}>
+                  Theme
+                </p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "8px" }}>
+                  {COLOR_PROFILES.map((profile) => {
+                    const isActive = activeProfile.id === profile.id;
+                    return (
+                      <div
+                        key={profile.id}
+                        onClick={() => {
+                          setProfile(profile.id);
+                        }}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          padding: "8px 10px",
+                          borderRadius: "8px",
+                          cursor: "pointer",
+                          background: isActive ? "var(--accent-dim)" : "rgba(255,255,255,0.03)",
+                          border: `1px solid ${isActive ? "var(--accent)" : "var(--border-subtle)"}`,
+                        }}
+                      >
+                        <div style={{ display: "flex", gap: "3px" }}>
+                          {profile.preview.slice(0, 2).map((color, i) => (
+                            <div key={i} style={{ width: "12px", height: "12px", borderRadius: "3px", background: color }} />
+                          ))}
+                        </div>
+                        <span style={{ fontSize: "11px", color: isActive ? "var(--accent)" : "var(--text-secondary)" }}>
+                          {profile.name}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </motion.div>
         )}

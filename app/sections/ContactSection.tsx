@@ -140,7 +140,7 @@ export default function ContactSection() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="flex items-center gap-2 text-sm font-medium p-3 rounded-xl"
-                  style={{ background: "rgba(45, 212, 191, 0.1)", color: "var(--accent)" }}
+                  style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
                 >
                   <CheckCircle size={16} /> Message sent successfully! I&apos;ll get back to you soon.
                 </motion.div>

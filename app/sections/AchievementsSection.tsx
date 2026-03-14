@@ -1,0 +1,49 @@
+"use client";
+
+import { motion } from "framer-motion";
+import AnimateOnScroll from "../components/AnimateOnScroll";
+import { achievements } from "../data/portfolio-data";
+import { Trophy, Award } from "lucide-react";
+
+export default function AchievementsSection() {
+  return (
+    <section id="achievements" className="section-padding max-w-7xl mx-auto">
+      <AnimateOnScroll>
+        <p className="text-xs font-mono tracking-[0.3em] uppercase mb-3" style={{ color: "var(--accent)" }}>
+          Recognition
+        </p>
+        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-12">
+          <span className="gradient-text">Achievements</span>
+        </h2>
+      </AnimateOnScroll>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {achievements.map((ach, i) => (
+          <AnimateOnScroll key={ach.title} delay={0.1 + i * 0.1}>
+            <motion.div
+              className="glass-card p-7 cursor-default gradient-border-animated h-full flex items-start gap-4"
+              whileHover={{ scale: 1.02, y: -4 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            >
+              <div
+                className="p-3 rounded-xl shrink-0 pulse-glow"
+                style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+              >
+                {i === 0 ? <Trophy size={22} /> : <Award size={22} />}
+              </div>
+              <div>
+                <p className="text-sm font-bold mb-1" style={{ color: "var(--accent)" }}>
+                  {ach.award}
+                </p>
+                <h4 className="text-lg font-bold mb-2" style={{ color: "var(--text-primary)" }}>
+                  {ach.title}
+                </h4>
+                <p className="text-sm" style={{ color: "var(--text-muted)" }}>{ach.detail}</p>
+              </div>
+            </motion.div>
+          </AnimateOnScroll>
+        ))}
+      </div>
+    </section>
+  );
+}
