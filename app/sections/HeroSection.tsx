@@ -7,13 +7,13 @@ import { personalInfo } from "../data/portfolio-data";
 import Image from "next/image";
 
 export default function HeroSection() {
-  const [photoVisible, setPhotoVisible] = useState(true);
+  const [photoVisible, setPhotoVisible] = useState<boolean | null>(null);
 
   useEffect(() => {
     fetch("/api/photo-toggle")
       .then((r) => r.json())
       .then((d) => setPhotoVisible(d.visible))
-      .catch(() => {});
+      .catch(() => setPhotoVisible(true));
   }, []);
 
   return (
@@ -51,7 +51,8 @@ export default function HeroSection() {
       />
 
       {/* Hero content — text left (or centered), photo right */}
-      <div className={`relative z-10 w-full flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20 ${photoVisible ? 'max-w-6xl' : 'max-w-4xl justify-center'}`}>
+      {photoVisible !== null && (
+        <div className={`relative z-10 w-full flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20 ${photoVisible ? 'max-w-6xl' : 'max-w-4xl justify-center'}`}>
         {/* Text Column */}
         <div className={`flex-1 ${photoVisible ? 'text-center md:text-left' : 'text-center flex flex-col items-center'}`}>
           <motion.div
@@ -189,7 +190,8 @@ export default function HeroSection() {
             </div>
           </motion.div>
         )}
-      </div>
+        </div>
+      )}
 
       {/* Scroll indicator */}
       <motion.div

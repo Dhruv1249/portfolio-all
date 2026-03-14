@@ -19,7 +19,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
   const themeRef = useRef<HTMLDivElement>(null);
-  const { activeProfile, setProfile } = useTheme();
+  const { activeProfile, setProfile, animations, setAnimations } = useTheme();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -152,13 +152,55 @@ export default function Navbar() {
                           <span style={{ fontSize: "13px", fontWeight: 500, color: isActive ? "var(--accent)" : "var(--text-secondary)" }}>
                             {profile.name}
                           </span>
+                          </div>
+                          {isActive && <Check size={14} style={{ color: "var(--accent)" }} />}
                         </div>
-                        {isActive && <Check size={14} style={{ color: "var(--accent)" }} />}
+                      );
+                    })}
+
+                    <div style={{ height: "1px", background: "var(--border-subtle)", margin: "8px 0" }} />
+                    
+                    <div
+                      onClick={() => setAnimations(!animations)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "10px 12px",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        background: "transparent",
+                        transition: "background 0.2s",
+                      }}
+                    >
+                      <div style={{ fontSize: "14px", color: "var(--text-primary)" }}>Animations</div>
+                      <div
+                        style={{
+                          width: "36px",
+                          height: "20px",
+                          borderRadius: "10px",
+                          background: animations ? "var(--accent)" : "var(--bg-card-solid)",
+                          border: animations ? "none" : "1px solid var(--border-subtle)",
+                          position: "relative",
+                          transition: "all 0.3s ease",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "16px",
+                            height: "16px",
+                            borderRadius: "50%",
+                            background: "#fff",
+                            position: "absolute",
+                            top: animations ? "2px" : "1px",
+                            left: animations ? "18px" : "1px",
+                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                          }}
+                        />
                       </div>
-                    );
-                  })}
-                </motion.div>
-              )}
+                    </div>
+                  </motion.div>
+                )}
             </AnimatePresence>
           </div>
 

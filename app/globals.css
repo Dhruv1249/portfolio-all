@@ -289,6 +289,11 @@ body {
   transition: all 0.3s ease;
 }
 
+body.disable-animations * {
+  transition: none !important;
+  animation: none !important;
+}
+
 .form-input::placeholder {
   color: var(--text-muted);
 }

@@ -17,13 +17,20 @@ const directionOffsets = {
   right: { x: -40, y: 0 },
 };
 
+import { useTheme } from '../contexts/ThemeContext';
+
 export default function AnimateOnScroll({
   children,
   delay = 0,
   direction = "up",
   className = "",
 }: Props) {
+  const { animations } = useTheme();
   const offset = directionOffsets[direction];
+
+  if (!animations) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <motion.div

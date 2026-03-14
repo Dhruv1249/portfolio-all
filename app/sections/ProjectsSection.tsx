@@ -28,7 +28,6 @@ export default function ProjectsSection() {
           return (
             <AnimateOnScroll key={project.title} delay={0.1}>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                {/* Project Image */}
                 <motion.div
                   className={`relative rounded-2xl overflow-hidden border group ${isEven ? "lg:order-1" : "lg:order-2"}`}
                   style={{ borderColor: "var(--border-glass)" }}

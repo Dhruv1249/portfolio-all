@@ -176,25 +176,43 @@ export const COLOR_PROFILES: ColorProfile[] = [
 interface ThemeContextType {
   activeProfile: ColorProfile;
   setProfile: (id: string) => void;
+  animations: boolean;
+  setAnimations: (val: boolean) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
   activeProfile: COLOR_PROFILES[0],
   setProfile: () => {},
+  animations: true,
+  setAnimations: () => {},
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [activeProfile, setActiveProfile] = useState<ColorProfile>(COLOR_PROFILES[0]);
+  const [animations, setAnimationsState] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem('portfolio-nontech-theme');
-    if (saved) {
-      const found = COLOR_PROFILES.find(p => p.id === saved);
+    const savedTheme = localStorage.getItem('portfolio-nontech-theme');
+    if (savedTheme) {
+      const found = COLOR_PROFILES.find(p => p.id === savedTheme);
       if (found) {
         setActiveProfile(found);
         applyTheme(found);
       }
     }
+
+    const savedAnim = localStorage.getItem('portfolio-nontech-animations');
+    if (savedAnim !== null) {
+      const isEnabled = savedAnim === 'true';
+      setAnimationsState(isEnabled);
+      document.body.classList.toggle('disable-animations', !isEnabled);
+    }
+  }, []);
+
+  const setAnimations = useCallback((val: boolean) => {
+    setAnimationsState(val);
+    localStorage.setItem('portfolio-nontech-animations', val.toString());
+    document.body.classList.toggle('disable-animations', !val);
   }, []);
 
   const applyTheme = useCallback((profile: ColorProfile) => {
@@ -214,7 +232,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [applyTheme]);
 
   return (
-    <ThemeContext.Provider value={{ activeProfile, setProfile }}>
+    <ThemeContext.Provider value={{ activeProfile, setProfile, animations, setAnimations }}>
       {children}
     </ThemeContext.Provider>
   );
