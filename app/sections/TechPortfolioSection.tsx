@@ -38,10 +38,10 @@ export default function TechPortfolioSection() {
               
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] mb-3 tracking-tight">
-                  Are you a Developer?
+                  Into tech stuff?
                 </h3>
                 <p className="text-[var(--text-secondary)] text-lg max-w-xl mx-auto leading-relaxed">
-                  Experience my interactive Linux-inspired Terminal ecosystem. Built with a custom window manager, CLI, and advanced animations.
+                  I also built a portfolio that looks like a Linux desktop — with a terminal, draggable windows, and everything. Made for the techy crowd, check it out if you&apos;re into that!
                 </p>
               </div>
 

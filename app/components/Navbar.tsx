@@ -213,6 +213,7 @@ export default function Navbar() {
                         { id: 'starfield', name: 'Stars' },
                         { id: 'galaxy', name: 'Galaxy' },
                         { id: 'threads', name: 'Threads' },
+                        { id: 'lightrays', name: 'Rays' },
                       ].map((effect) => {
                         const isActive = particleMode === effect.id;
                         return (
@@ -374,6 +375,7 @@ export default function Navbar() {
                       { id: 'starfield', name: 'Stars' },
                       { id: 'galaxy', name: 'Galaxy' },
                       { id: 'threads', name: 'Threads' },
+                      { id: 'lightrays', name: 'Rays' },
                     ].map((effect) => {
                       const isActive = particleMode === effect.id;
                       return (
