@@ -19,7 +19,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
   const themeRef = useRef<HTMLDivElement>(null);
-  const { activeProfile, setProfile, animations, setAnimations } = useTheme();
+  const { activeProfile, setProfile, animations, setAnimations, particleMode, setParticleMode } = useTheme();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -199,6 +199,42 @@ export default function Navbar() {
                         />
                       </div>
                     </div>
+                    
+                    <div style={{ height: "1px", background: "var(--border-subtle)", margin: "8px 0" }} />
+                    <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "8px", padding: "0 4px" }}>
+                      Particles
+                    </p>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "4px" }}>
+                      {[
+                        { id: 'none', name: 'None' },
+                        { id: 'nodes', name: 'Nodes' },
+                        { id: 'rain', name: 'Rain' },
+                        { id: 'floatinglines', name: 'Lines' },
+                        { id: 'starfield', name: 'Stars' },
+                        { id: 'galaxy', name: 'Galaxy' },
+                        { id: 'threads', name: 'Threads' },
+                      ].map((effect) => {
+                        const isActive = particleMode === effect.id;
+                        return (
+                          <div
+                            key={effect.id}
+                            onClick={() => setParticleMode(effect.id)}
+                            style={{
+                              padding: "6px 4px",
+                              textAlign: "center",
+                              borderRadius: "8px",
+                              cursor: "pointer",
+                              background: isActive ? "var(--accent-dim)" : "transparent",
+                              color: isActive ? "var(--accent)" : "var(--text-secondary)",
+                              fontSize: "11px",
+                              transition: "background 0.2s",
+                            }}
+                          >
+                            {effect.name}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </motion.div>
                 )}
             </AnimatePresence>
@@ -323,6 +359,44 @@ export default function Navbar() {
                       </div>
                     );
                   })}
+                </div>
+
+                <div style={{ marginTop: "16px" }}>
+                  <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "12px" }}>
+                    Particles
+                  </p>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
+                    {[
+                      { id: 'none', name: 'None' },
+                      { id: 'nodes', name: 'Nodes' },
+                      { id: 'rain', name: 'Rain' },
+                      { id: 'floatinglines', name: 'Lines' },
+                      { id: 'starfield', name: 'Stars' },
+                      { id: 'galaxy', name: 'Galaxy' },
+                      { id: 'threads', name: 'Threads' },
+                    ].map((effect) => {
+                      const isActive = particleMode === effect.id;
+                      return (
+                        <div
+                          key={effect.id}
+                          onClick={() => setParticleMode(effect.id)}
+                          style={{
+                            padding: "8px",
+                            textAlign: "center",
+                            borderRadius: "8px",
+                            cursor: "pointer",
+                            background: isActive ? "var(--accent-dim)" : "rgba(255,255,255,0.03)",
+                            border: `1px solid ${isActive ? "var(--accent)" : "var(--border-subtle)"}`,
+                            color: isActive ? "var(--accent)" : "var(--text-secondary)",
+                            fontSize: "11px",
+                            fontWeight: isActive ? 500 : 400,
+                          }}
+                        >
+                          {effect.name}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>

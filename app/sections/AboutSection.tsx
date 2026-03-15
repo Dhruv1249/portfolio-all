@@ -3,9 +3,10 @@
 import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
 import { aboutText, engineeringFocus } from "../data/portfolio-data";
-import { Code2, Cloud, Brain } from "lucide-react";
+import { Code2, Cloud, Brain, Terminal, ArrowUpRight } from "lucide-react";
 
 const focusIcons = [<Code2 key="code" size={22} />, <Cloud key="cloud" size={22} />, <Brain key="brain" size={22} />];
+
 
 export default function AboutSection() {
   return (
@@ -69,3 +70,4 @@ export default function AboutSection() {
     </section>
   );
 }
+

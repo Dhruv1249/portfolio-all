@@ -131,9 +131,16 @@ export const allTechNames = [
 
 export const experience = {
   role: "Freelance Full-Stack Developer",
-  description:
-    "Building responsive client websites with Next.js, Tailwind, and Firebase. Automated enquiry systems and lead management pipelines.",
-  tech: ["Next.js", "Tailwind CSS", "Firebase", "NodeMailer"],
+  company: "Remote",
+  period: "Nov 2025 – Present",
+  bullets: [
+    "Developed responsive client websites focusing on UI/UX, mobile-first layouts, and performance optimization.",
+    "Built front-end systems using Next.js, Tailwind CSS, and semantic HTML/CSS with a focus on accessibility and clean component architecture.",
+    "Automated enquiry workflows using NodeMailer and integrated Firebase with Google Sheets API for centralized lead management.",
+    "Implemented structured JSON-LD schemas and semantic HTML5, driving a 40% increase in organic search traffic.",
+    "Managed end-to-end project delivery from requirement gathering through deployment, using Git-based workflows and CI/CD pipelines.",
+  ],
+  tech: ["Next.js", "Tailwind CSS", "Firebase", "NodeMailer", "Google Sheets API", "SEO"],
 };
 
 export const education = [

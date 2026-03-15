@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
 import { featuredProjects, additionalProjects } from "../data/portfolio-data";
 import { ArrowUpRight, Github, ExternalLink } from "lucide-react";
+import TiltedCard from "../components/ui/TiltedCard";
 
 export default function ProjectsSection() {
   return (
@@ -28,35 +29,30 @@ export default function ProjectsSection() {
           return (
             <AnimateOnScroll key={project.title} delay={0.1}>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                <motion.div
-                  className={`relative rounded-2xl overflow-hidden border group ${isEven ? "lg:order-1" : "lg:order-2"}`}
-                  style={{ borderColor: "var(--border-glass)" }}
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                <div
+                  className={`relative ${isEven ? "lg:order-1" : "lg:order-2"} w-full aspect-[16/10]`}
                 >
                   {project.image ? (
-                    <div className="relative aspect-[16/10] overflow-hidden">
-                      <Image
-                        src={project.image}
-                        alt={`${project.title} screenshot`}
-                        fill
-                        className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                      />
-                      {/* Overlay gradient */}
-                      <div
-                        className="absolute inset-0 opacity-30 group-hover:opacity-10 transition-opacity duration-500"
-                        style={{ background: "linear-gradient(to top, var(--bg-primary), transparent 60%)" }}
-                      />
-                    </div>
+                    <TiltedCard
+                      imageSrc={project.image}
+                      altText={`${project.title} screenshot`}
+                      containerHeight="100%"
+                      containerWidth="100%"
+                      imageHeight="100%"
+                      imageWidth="100%"
+                      rotateAmplitude={12}
+                      scaleOnHover={1.05}
+                      showMobileWarning={false}
+                      showTooltip={false}
+                    />
                   ) : (
-                    <div className="project-placeholder aspect-[16/10]">
+                    <div className="project-placeholder aspect-[16/10] rounded-2xl border" style={{ borderColor: "var(--border-glass)" }}>
                       <p className="text-4xl font-bold" style={{ color: "var(--accent)", opacity: 0.4 }}>
                         {project.title}
                       </p>
                     </div>
                   )}
-                </motion.div>
+                </div>
 
                 {/* Text content */}
                 <div className={`${isEven ? "lg:order-2" : "lg:order-1"}`}>

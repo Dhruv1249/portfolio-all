@@ -1,9 +1,16 @@
 "use client";
 
-import { ThemeProvider } from "./contexts/ThemeContext";
+import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import Navbar from "./components/Navbar";
+import ParticleBackground from "./components/ParticleBackground";
+
+function ParticleWrapper() {
+  const { particleMode } = useTheme();
+  return <ParticleBackground mode={particleMode as any} />;
+}
 import HeroSection from "./sections/HeroSection";
 import AboutSection from "./sections/AboutSection";
+import TechPortfolioSection from "./sections/TechPortfolioSection";
 import ProjectsSection from "./sections/ProjectsSection";
 import SkillsSection from "./sections/SkillsSection";
 import ExperienceSection from "./sections/ExperienceSection";
@@ -14,9 +21,12 @@ import ContactSection from "./sections/ContactSection";
 export default function Home() {
   return (
     <ThemeProvider>
+      <ParticleWrapper />
       <Navbar />
       <main>
         <HeroSection />
+        <div className="section-divider" />
+        <TechPortfolioSection />
         <div className="section-divider" />
         <AboutSection />
         <div className="section-divider" />
