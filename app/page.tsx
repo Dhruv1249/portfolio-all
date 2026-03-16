@@ -15,6 +15,7 @@ import ProjectsSection from "./sections/ProjectsSection";
 import SkillsSection from "./sections/SkillsSection";
 import ExperienceSection from "./sections/ExperienceSection";
 import EducationSection from "./sections/EducationSection";
+import CertificatesSection from "./sections/CertificatesSection";
 import AchievementsSection from "./sections/AchievementsSection";
 import ContactSection from "./sections/ContactSection";
 
@@ -37,6 +38,8 @@ export default function Home() {
         <ExperienceSection />
         <div className="section-divider" />
         <EducationSection />
+        <div className="section-divider" />
+        <CertificatesSection />
         <div className="section-divider" />
         <AchievementsSection />
         <div className="section-divider" />

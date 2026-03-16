@@ -181,3 +181,16 @@ export const achievements = [
     icon: "🥇",
   },
 ];
+
+export const certifications = [
+  {
+    title: "Cloud Computing",
+    issuer: "NPTEL",
+    link: "https://drive.google.com/file/d/1oC01o8KJWbJgoAvF1imNXfG5KLEQgu9r/view?usp=sharing",
+  },
+  {
+    title: "Introduction to Large Language Models",
+    issuer: "NPTEL",
+    link: "https://drive.google.com/file/d/1Ypk5IU8V_YzrDsZ1wsVm00OnfqWnwZol/view?usp=sharing",
+  },
+];
