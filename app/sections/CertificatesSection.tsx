@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
 import { certifications } from "../data/portfolio-data";
 import { Award, ExternalLink } from "lucide-react";
+import Image from "next/image";
 
 export default function CertificatesSection() {
   return (
@@ -24,27 +25,47 @@ export default function CertificatesSection() {
               href={cert.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="glass-card p-7 gradient-border-animated h-full flex items-start gap-4"
-              style={{ display: "flex", textDecoration: "none" }}
+              className="glass-card p-0 gradient-border-animated h-full flex flex-col cursor-pointer overflow-hidden block"
+              style={{ textDecoration: "none" }}
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
             >
-              <div
-                className="p-3 rounded-xl shrink-0 pulse-glow"
-                style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
-              >
-                <Award size={22} />
+              <div className="relative w-full h-48 sm:h-56 md:h-64 border-b border-[var(--border-subtle)]">
+                {cert.image ? (
+                  <Image
+                    src={cert.image}
+                    alt={cert.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-[var(--background-secondary)]">
+                    <Award size={48} style={{ color: "var(--accent-dim)" }} />
+                  </div>
+                )}
               </div>
-              <div>
-                <p className="text-sm font-bold mb-1" style={{ color: "var(--accent)" }}>
-                  {cert.issuer}
-                </p>
-                <h4 className="text-lg font-bold mb-2" style={{ color: "var(--text-primary)" }}>
-                  {cert.title}
-                </h4>
-                <div className="flex items-center gap-1.5 text-xs mt-3" style={{ color: "var(--text-muted)" }}>
-                  <span>View Certificate</span>
-                  <ExternalLink size={12} />
+              
+              <div className="p-7 flex flex-col flex-grow">
+                <div className="flex items-start gap-4">
+                  <div
+                    className="p-3 rounded-xl shrink-0 pulse-glow"
+                    style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+                  >
+                    <Award size={22} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold mb-1" style={{ color: "var(--accent)" }}>
+                      {cert.issuer}
+                    </p>
+                    <h4 className="text-lg font-bold mb-2" style={{ color: "var(--text-primary)" }}>
+                      {cert.title}
+                    </h4>
+                    <div className="flex items-center gap-1.5 text-xs mt-3" style={{ color: "var(--text-muted)" }}>
+                      <span>View Certificate</span>
+                      <ExternalLink size={12} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.a>

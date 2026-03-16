@@ -71,8 +71,57 @@ export default function ContactSection() {
         </AnimateOnScroll>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          {/* Contact Form */}
+          {/* Social Links */}
           <AnimateOnScroll delay={0.1}>
+            <div className="space-y-5">
+              {socialLinks.map((link) => (
+                <motion.a
+                  key={link.label}
+                  href={link.href}
+                  target={link.label !== "Email" ? "_blank" : undefined}
+                  rel={link.label !== "Email" ? "noopener noreferrer" : undefined}
+                  className="glass-card glass-card-accent p-6 flex items-center justify-between group cursor-pointer block"
+                  whileHover={{ x: 6, scale: 1.01 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                >
+                  <div className="flex items-center gap-4">
+                    <div
+                      className="p-3 rounded-xl"
+                      style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+                    >
+                      {link.icon}
+                    </div>
+                    <div>
+                      <p className="text-xs font-mono tracking-wider uppercase mb-0.5" style={{ color: "var(--text-muted)" }}>
+                        {link.label}
+                      </p>
+                      <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+                        {link.display}
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowUpRight
+                    size={18}
+                    className="opacity-0 group-hover:opacity-100 transition-all duration-300"
+                    style={{ color: "var(--accent)" }}
+                  />
+                </motion.a>
+              ))}
+
+              <div className="mt-8 pt-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                <a
+                  href={`mailto:${personalInfo.email}`}
+                  className="form-button inline-flex items-center gap-2"
+                >
+                  <Mail size={16} />
+                  {personalInfo.email}
+                </a>
+              </div>
+            </div>
+          </AnimateOnScroll>
+
+          {/* Contact Form */}
+          <AnimateOnScroll delay={0.2}>
             <form
               className="glass-card-static p-8 md:p-10 space-y-5"
               onSubmit={handleSubmit}
@@ -156,55 +205,6 @@ export default function ContactSection() {
                 </motion.div>
               )}
             </form>
-          </AnimateOnScroll>
-
-          {/* Social Links */}
-          <AnimateOnScroll delay={0.2}>
-            <div className="space-y-5">
-              {socialLinks.map((link) => (
-                <motion.a
-                  key={link.label}
-                  href={link.href}
-                  target={link.label !== "Email" ? "_blank" : undefined}
-                  rel={link.label !== "Email" ? "noopener noreferrer" : undefined}
-                  className="glass-card glass-card-accent p-6 flex items-center justify-between group cursor-pointer block"
-                  whileHover={{ x: 6, scale: 1.01 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="p-3 rounded-xl"
-                      style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
-                    >
-                      {link.icon}
-                    </div>
-                    <div>
-                      <p className="text-xs font-mono tracking-wider uppercase mb-0.5" style={{ color: "var(--text-muted)" }}>
-                        {link.label}
-                      </p>
-                      <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
-                        {link.display}
-                      </p>
-                    </div>
-                  </div>
-                  <ArrowUpRight
-                    size={18}
-                    className="opacity-0 group-hover:opacity-100 transition-all duration-300"
-                    style={{ color: "var(--accent)" }}
-                  />
-                </motion.a>
-              ))}
-
-              <div className="mt-8 pt-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                <a
-                  href={`mailto:${personalInfo.email}`}
-                  className="form-button inline-flex items-center gap-2"
-                >
-                  <Mail size={16} />
-                  {personalInfo.email}
-                </a>
-              </div>
-            </div>
           </AnimateOnScroll>
         </div>
       </div>
