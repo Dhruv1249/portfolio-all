@@ -51,10 +51,10 @@ export default function Navbar() {
         borderBottom: scrolled ? "1px solid var(--border-subtle)" : "1px solid transparent",
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between h-16 md:h-20">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between h-20 md:h-24">
         {/* Logo */}
-        <a href="#" className="text-xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>
-          DHRUV<span style={{ color: "var(--accent)" }}>.</span>
+        <a href="#" className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)", fontSize: '1.5rem' }}>
+          Dhruv<span style={{ color: "var(--accent)" }}>.</span>
         </a>
 
         {/* Desktop Nav */}
@@ -66,8 +66,8 @@ export default function Navbar() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 + i * 0.08 }}
-              className="text-xs font-medium uppercase tracking-[0.15em] transition-colors duration-300 hover:text-[var(--accent)]"
-              style={{ color: "var(--text-muted)" }}
+              className="text-base font-medium tracking-wide transition-colors duration-300 hover:text-[var(--accent)]"
+              style={{ color: "var(--text-muted)", fontSize: '1.1rem' }}
             >
               {link.label}
             </motion.a>
@@ -79,10 +79,10 @@ export default function Navbar() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.75 }}
-            className="text-xs font-medium uppercase tracking-[0.15em] inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-[var(--accent)]"
-            style={{ color: "var(--text-muted)" }}
+            className="text-base font-medium tracking-wide inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-[var(--accent)]"
+            style={{ color: "var(--text-muted)", fontSize: '1.1rem' }}
           >
-            <FileText size={13} /> Resume
+            <FileText size={18} /> Resume
           </motion.a>
 
           {/* Theme Selector */}
@@ -92,10 +92,10 @@ export default function Navbar() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.8 }}
               onClick={() => setThemeOpen(!themeOpen)}
-              className="text-xs font-medium uppercase tracking-[0.15em] inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-[var(--accent)]"
-              style={{ color: "var(--text-muted)", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit" }}
+              className="text-base font-medium tracking-wide inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-[var(--accent)]"
+              style={{ color: "var(--text-muted)", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: '1.1rem' }}
             >
-              <Palette size={13} /> Theme
+              <Palette size={18} /> Theme
             </motion.button>
 
             <AnimatePresence>
@@ -119,7 +119,7 @@ export default function Navbar() {
                     zIndex: 100,
                   }}
                 >
-                  <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "8px", padding: "0 4px" }}>
+                  <p style={{ fontSize: "12px", letterSpacing: "0.05em", color: "var(--text-muted)", marginBottom: "8px", padding: "0 4px" }}>
                     Color Profile
                   </p>
                   {COLOR_PROFILES.map((profile) => {
@@ -201,7 +201,7 @@ export default function Navbar() {
                     </div>
                     
                     <div style={{ height: "1px", background: "var(--border-subtle)", margin: "8px 0" }} />
-                    <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "8px", padding: "0 4px" }}>
+                    <p style={{ fontSize: "0.75rem", letterSpacing: "0.05em", color: "var(--text-muted)", marginBottom: "0.5rem", padding: "0 0.25rem" }}>
                       Particles
                     </p>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "4px" }}>
@@ -246,27 +246,27 @@ export default function Navbar() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.85 }}
-            className="text-xs font-semibold uppercase tracking-wider px-5 py-2.5 rounded-xl transition-all duration-300"
-            style={{
-              background: "var(--accent-dim)",
-              color: "var(--accent)",
-              border: "1px solid var(--accent-glow)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "var(--accent)";
-              e.currentTarget.style.color = "var(--bg-primary)";
-              e.currentTarget.style.transform = "translateY(-1px)";
-              e.currentTarget.style.boxShadow = "0 4px 20px var(--accent-glow)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "var(--accent-dim)";
-              e.currentTarget.style.color = "var(--accent)";
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "none";
-            }}
-          >
-            Get In Touch
-          </motion.a>
+          className="text-sm font-semibold tracking-wide px-5 py-2.5 rounded-xl transition-all duration-300"
+          style={{
+            background: "var(--accent-dim)",
+            color: "var(--accent)",
+            border: "1px solid var(--accent-glow)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--accent)";
+            e.currentTarget.style.color = "var(--bg-primary)";
+            e.currentTarget.style.transform = "translateY(-1px)";
+            e.currentTarget.style.boxShadow = "0 4px 20px var(--accent-glow)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "var(--accent-dim)";
+            e.currentTarget.style.color = "var(--accent)";
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "none";
+          }}
+        >
+          Get in Touch
+        </motion.a>
         </div>
 
         {/* Mobile Toggle */}
@@ -304,7 +304,7 @@ export default function Navbar() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.06 }}
-                  className="text-sm font-medium uppercase tracking-widest py-2 transition-colors hover:text-[var(--accent)]"
+                  className="text-base font-medium tracking-widest py-2 transition-colors hover:text-[var(--accent)]"
                   style={{ color: "var(--text-secondary)" }}
                 >
                   {link.label}
@@ -318,10 +318,10 @@ export default function Navbar() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: navLinks.length * 0.06 }}
-                className="text-sm font-medium uppercase tracking-widest py-2 inline-flex items-center gap-2 transition-colors hover:text-[var(--accent)]"
-                style={{ color: "var(--text-secondary)" }}
+                className="text-base font-medium tracking-wide py-2 inline-flex items-center gap-2 transition-colors hover:text-[var(--accent)]"
+                style={{ color: "var(--text-secondary)", fontSize: '1.1rem' }}
               >
-                <FileText size={14} /> Resume
+                <FileText size={18} /> Resume
               </motion.a>
 
               {/* Mobile Theme Selector */}

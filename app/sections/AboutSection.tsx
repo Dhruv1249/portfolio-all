@@ -16,24 +16,20 @@ export default function AboutSection() {
         <div>
           <AnimateOnScroll>
             <p
-              className="text-xs font-mono tracking-[0.3em] uppercase mb-4"
+              className="text-3xl md:text-5xl font-bold tracking-tight mb-4"
               style={{ color: "var(--accent)" }}
             >
               About Me
             </p>
           </AnimateOnScroll>
           <AnimateOnScroll delay={0.1}>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight mb-8">
-              <span className="gradient-text">Engineering end-to-end</span>
-              <br />
-              <span className="gradient-text">intelligent software</span>
-              <br />
-              <span className="gradient-text">systems</span>
+            <h2 className="text-lg md:text-xl font-medium leading-relaxed tracking-normal mb-8">
+              <span className="gradient-text text-secondary">Engineering end-to-end intelligent software systems</span>
               <span style={{ color: "var(--accent)" }}>.</span>
             </h2>
           </AnimateOnScroll>
           <AnimateOnScroll delay={0.2}>
-            <p className="text-base leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-base leading-relaxed whitespace-pre-line" style={{ color: "var(--text-secondary)" }}>
               {aboutText}
             </p>
           </AnimateOnScroll>

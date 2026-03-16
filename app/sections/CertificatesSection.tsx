@@ -10,10 +10,10 @@ export default function CertificatesSection() {
   return (
     <section id="certificates" className="section-padding max-w-7xl mx-auto">
       <AnimateOnScroll>
-        <p className="text-xs font-mono tracking-[0.3em] uppercase mb-3" style={{ color: "var(--accent)" }}>
+        <p className="text-3xl md:text-5xl font-bold tracking-tight mb-3" style={{ color: "var(--accent)" }}>
           Continuous Learning
         </p>
-        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-12">
+        <h2 className="text-lg md:text-xl font-medium tracking-normal mb-12">
           <span className="gradient-text">Certifications</span>
         </h2>
       </AnimateOnScroll>
@@ -60,7 +60,7 @@ export default function CertificatesSection() {
                         {cert.issuer}
                       </p>
                       {cert.period && (
-                        <span className="flex items-center gap-1.5 text-xs font-mono shrink-0" style={{ color: "var(--accent)" }}>
+                        <span className="flex items-center gap-1.5 text-[0.75rem] font-mono shrink-0" style={{ color: "var(--accent)" }}>
                           {cert.period}
                         </span>
                       )}

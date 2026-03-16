@@ -95,12 +95,12 @@ export default function SkillsSection() {
         <AnimateOnScroll>
           <div className="text-center mb-20">
             <p
-              className="text-xs font-mono tracking-[0.3em] uppercase mb-4"
+              className="text-3xl md:text-5xl font-bold tracking-tight mb-4"
               style={{ color: "var(--accent)" }}
             >
               Tech Stack
             </p>
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-4">
+            <h2 className="text-lg md:text-xl font-medium tracking-normal mb-4">
               <span className="gradient-text">Core Toolkit</span>
             </h2>
             <p
@@ -118,7 +118,7 @@ export default function SkillsSection() {
             <AnimateOnScroll key={category.title} delay={catIdx * 0.1}>
               <div className="glass-card-static p-8 h-full">
                 <h3
-                  className="text-sm font-mono tracking-[0.2em] uppercase mb-8 text-center"
+                  className="text-sm font-mono tracking-[0.2em] mb-8 text-center"
                   style={{ color: "var(--accent)" }}
                 >
                   {category.title}

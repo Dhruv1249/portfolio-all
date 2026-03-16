@@ -9,7 +9,7 @@ import { Mail, Github, Linkedin, Send, ArrowUpRight, CheckCircle, AlertCircle } 
 const socialLinks = [
   { icon: <Mail size={20} />, label: "Email", href: `mailto:${personalInfo.email}`, display: personalInfo.email },
   { icon: <Github size={20} />, label: "GitHub", href: personalInfo.github, display: "Dhruv1249" },
-  { icon: <Linkedin size={20} />, label: "LinkedIn", href: personalInfo.linkedin, display: "dhruv124" },
+  { icon: <Linkedin size={20} />, label: "LinkedIn", href: personalInfo.linkedin, display: "dhruv-ds" },
 ];
 
 export default function ContactSection() {
@@ -56,13 +56,11 @@ export default function ContactSection() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <AnimateOnScroll>
-          <p className="text-xs font-mono tracking-[0.3em] uppercase mb-3" style={{ color: "var(--accent)" }}>
-            Contact
+          <p className="text-3xl md:text-5xl font-bold tracking-tight mb-3" style={{ color: "var(--accent)" }}>
+           Let's Connect 
           </p>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-4">
-            <span className="gradient-text">Let&apos;s build the</span>
-            <br />
-            <span className="gradient-text">future</span>
+          <h2 className="text-lg md:text-xl font-medium tracking-normal mb-4">
+            <span className="gradient-text">Let&apos;s build the future</span>
             <span style={{ color: "var(--accent)" }}>.</span>
           </h2>
           <p className="text-sm md:text-base max-w-lg mb-16" style={{ color: "var(--text-muted)" }}>
@@ -92,7 +90,7 @@ export default function ContactSection() {
                       {link.icon}
                     </div>
                     <div>
-                      <p className="text-xs font-mono tracking-wider uppercase mb-0.5" style={{ color: "var(--text-muted)" }}>
+                      <p className="text-[0.75rem] font-mono tracking-wide mb-0.5" style={{ color: "var(--text-muted)" }}>
                         {link.label}
                       </p>
                       <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
@@ -127,7 +125,7 @@ export default function ContactSection() {
               onSubmit={handleSubmit}
             >
               <div>
-                <label className="block text-xs font-mono tracking-wider uppercase mb-2" style={{ color: "var(--text-muted)" }}>
+                <label className="block text-[0.75rem] font-mono tracking-wide mb-2" style={{ color: "var(--text-muted)" }}>
                   Name
                 </label>
                 <input
@@ -141,7 +139,7 @@ export default function ContactSection() {
                 />
               </div>
               <div>
-                <label className="block text-xs font-mono tracking-wider uppercase mb-2" style={{ color: "var(--text-muted)" }}>
+                <label className="block text-[0.75rem] font-mono tracking-wide mb-2" style={{ color: "var(--text-muted)" }}>
                   Email
                 </label>
                 <input
@@ -155,7 +153,7 @@ export default function ContactSection() {
                 />
               </div>
               <div>
-                <label className="block text-xs font-mono tracking-wider uppercase mb-2" style={{ color: "var(--text-muted)" }}>
+                <label className="block text-[0.75rem] font-mono tracking-wide mb-2" style={{ color: "var(--text-muted)" }}>
                   Message
                 </label>
                 <textarea

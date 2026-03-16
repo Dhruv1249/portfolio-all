@@ -4,16 +4,17 @@ export const personalInfo = {
   name: "Dhruv",
   roles: ["Full-Stack Developer", "DevOps Enthusiast", "ML Engineer"],
   tagline:
-    "I build intelligent, scalable systems — from data pipelines to cloud-deployed AI applications.",
+    "Designing data-driven applications that combine machine learning, scalable backends, and modern cloud infrastructure.",
   email: "dhruv1249.lm@gmail.com",
   phone: "+91 7876503573",
   github: "https://github.com/Dhruv1249",
-  linkedin: "https://linkedin.com/in/dhruv124",
+  linkedin: "https://linkedin.com/in/dhruv-ds",
   resume: "https://drive.google.com/file/d/15CVRIhP6VVB5kUqO5F8Q3rXjhrVvOvqI/view?usp=sharing",
 };
 
 export const aboutText =
-  "CS undergraduate at Lovely Professional University. I design end-to-end systems that combine data, infrastructure, and intelligent applications — from raw data through ML pipelines to production-ready platforms.";
+  `Computer Science undergraduate at Lovely Professional University with a focus on building end-to-end intelligent systems.\n
+I enjoy working across the stack — from data ingestion and ML pipelines to backend services and production deployment. My work focuses on turning raw data into scalable, real-world applications.`;
 
 export const engineeringFocus = [
   {
@@ -142,9 +143,8 @@ export const experience = {
   period: "Nov '25 — Present",
   bullets: [
     "Developed responsive client websites focusing on UI/UX, mobile-first layouts, and performance optimization.",
-    "Built front-end systems using Next.js, Tailwind CSS, and semantic HTML/CSS with a focus on accessibility and clean component architecture.",
+    "Built front-end systems using Next.js, Tailwind CSS, and HTML/CSS with a focus on accessibility and clean component architecture.",
     "Automated enquiry workflows using NodeMailer and integrated Firebase with Google Sheets API for centralized lead management.",
-    "Implemented structured JSON-LD schemas and semantic HTML5, driving a 40% increase in organic search traffic.",
     "Managed end-to-end project delivery from requirement gathering through deployment, using Git-based workflows and CI/CD pipelines.",
   ],
   tech: ["Next.js", "Tailwind CSS", "Firebase", "NodeMailer", "Google Sheets API", "SEO"],

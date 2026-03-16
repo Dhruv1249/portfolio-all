@@ -80,7 +80,7 @@ export default function HeroSection() {
             className="mt-6"
           >
             <p
-              className="text-xs md:text-sm font-mono tracking-[0.2em] uppercase"
+              className="text-sm md:text-base font-mono tracking-[0.1em]"
               style={{ color: "var(--text-muted)" }}
             >
               {personalInfo.roles.join(" • ")}

@@ -9,10 +9,10 @@ export default function EducationSection() {
   return (
     <section id="education" className="section-padding max-w-7xl mx-auto">
       <AnimateOnScroll>
-        <p className="text-xs font-mono tracking-[0.3em] uppercase mb-3" style={{ color: "var(--accent)" }}>
+        <p className="text-3xl md:text-5xl font-bold tracking-tight mb-3" style={{ color: "var(--accent)" }}>
           Education
         </p>
-        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-12">
+        <h2 className="text-lg md:text-xl font-medium tracking-normal mb-12">
           <span className="gradient-text">Background</span>
         </h2>
       </AnimateOnScroll>
@@ -33,7 +33,7 @@ export default function EducationSection() {
                   <h3 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
                     {edu.institution}
                   </h3>
-                  <span className="text-xs font-mono" style={{ color: "var(--accent)" }}>
+                  <span className="text-[0.75rem] font-mono" style={{ color: "var(--accent)" }}>
                     {edu.period}
                   </span>
                 </div>
