@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
 import { achievements } from "../data/portfolio-data";
-import { Trophy, Award } from "lucide-react";
+import { Trophy, Award, Calendar } from "lucide-react";
 
 export default function AchievementsSection() {
   return (
@@ -31,10 +31,17 @@ export default function AchievementsSection() {
               >
                 {i === 0 ? <Trophy size={22} /> : <Award size={22} />}
               </div>
-              <div>
-                <p className="text-sm font-bold mb-1" style={{ color: "var(--accent)" }}>
-                  {ach.award}
-                </p>
+              <div className="flex-1">
+                <div className="flex justify-between items-start gap-2 mb-1">
+                  <p className="text-sm font-bold" style={{ color: "var(--accent)" }}>
+                    {ach.award}
+                  </p>
+                  {ach.period && (
+                    <span className="flex items-center gap-1.5 text-xs font-mono shrink-0" style={{ color: "var(--accent)" }}>
+                      {ach.period}
+                    </span>
+                  )}
+                </div>
                 <h4 className="text-lg font-bold mb-2" style={{ color: "var(--text-primary)" }}>
                   {ach.title}
                 </h4>

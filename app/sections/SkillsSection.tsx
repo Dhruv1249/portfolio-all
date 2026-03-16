@@ -22,6 +22,9 @@ import {
   SiScikitlearn,
   SiNumpy,
   SiPandas,
+  SiCplusplus,
+  SiPostgresql,
+  SiTensorflow,
 } from "react-icons/si";
 import { TbBinaryTree } from "react-icons/tb";
 
@@ -53,10 +56,8 @@ const skillCategories: SkillCategory[] = [
     skills: [
       { name: "Node.js", icon: <SiNodedotjs size={28} />, color: "#339933" },
       { name: "FastAPI", icon: <SiFastapi size={28} />, color: "#009688" },
-      { name: "REST APIs", icon: <SiNodedotjs size={28} />, color: "#68A063" },
       { name: "MongoDB", icon: <SiMongodb size={28} />, color: "#47A248" },
       { name: "Firebase", icon: <SiFirebase size={28} />, color: "#FFCA28" },
-      { name: "Python", icon: <SiPython size={28} />, color: "#3776AB" },
     ],
   },
   {
@@ -67,7 +68,6 @@ const skillCategories: SkillCategory[] = [
       { name: "NumPy", icon: <SiNumpy size={28} />, color: "#013243" },
       { name: "Pandas", icon: <SiPandas size={28} />, color: "#150458" },
       { name: "XGBoost", icon: <TbBinaryTree size={28} />, color: "#FF6600" },
-      { name: "Data Pipelines", icon: <SiPython size={28} />, color: "#FFD43B" },
     ],
   },
   {
@@ -123,12 +123,12 @@ export default function SkillsSection() {
                 >
                   {category.title}
                 </h3>
-                {/* 3×2 inner grid — same for every card */}
-                <div className="grid grid-cols-3 gap-4">
+                {/* Flex layout for symmetry — centers rows naturally */}
+                <div className="flex flex-wrap justify-center gap-4">
                   {category.skills.map((skill) => (
                     <motion.div
                       key={skill.name}
-                      className="skill-icon-card"
+                      className="skill-icon-card w-[28%] min-w-[75px]"
                       whileHover={{ scale: 1.08, y: -6 }}
                       transition={{ type: "spring", stiffness: 400, damping: 20 }}
                     >

@@ -33,7 +33,7 @@ export default function EducationSection() {
                   <h3 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
                     {edu.institution}
                   </h3>
-                  <span className="text-xs font-mono" style={{ color: "var(--text-muted)" }}>
+                  <span className="text-xs font-mono" style={{ color: "var(--accent)" }}>
                     {edu.period}
                   </span>
                 </div>

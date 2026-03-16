@@ -7,11 +7,11 @@ import { personalInfo } from "../data/portfolio-data";
 import { useTheme, COLOR_PROFILES } from "../contexts/ThemeContext";
 
 const navLinks = [
-  { label: "About", href: "#about" },
   { label: "Projects", href: "#projects" },
   { label: "Skills", href: "#skills" },
   { label: "Experience", href: "#experience" },
-  { label: "Contact", href: "#contact" },
+  { label: "Certificates", href: "#certificates" },
+  { label: "Achievements", href: "#achievements" },
 ];
 
 export default function Navbar() {

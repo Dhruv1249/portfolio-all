@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
 import { featuredProjects, additionalProjects } from "../data/portfolio-data";
-import { ArrowUpRight, Github, ExternalLink } from "lucide-react";
+import { ArrowUpRight, Github, ExternalLink, Calendar } from "lucide-react";
 import TiltedCard from "../components/ui/TiltedCard";
 
 export default function ProjectsSection() {
@@ -62,6 +62,11 @@ export default function ProjectsSection() {
                   <h3 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: "var(--text-primary)" }}>
                     {project.title} — {project.subtitle}
                   </h3>
+                  {project.period && (
+                    <div className="flex items-center gap-1.5 text-xs font-mono mb-4" style={{ color: "var(--accent)" }}>
+                      <Calendar size={14} /> {project.period}
+                    </div>
+                  )}
                   <p className="text-sm leading-relaxed mb-6" style={{ color: "var(--text-secondary)" }}>
                     {project.description}
                   </p>
@@ -133,6 +138,11 @@ export default function ProjectsSection() {
                   <h4 className="text-lg font-bold mb-2" style={{ color: "var(--text-primary)" }}>
                     {proj.title}
                   </h4>
+                  {proj.period && (
+                    <div className="flex items-center gap-1.5 text-xs font-mono mb-3" style={{ color: "var(--accent)" }}>
+                      <Calendar size={12} /> {proj.period}
+                    </div>
+                  )}
                   <p className="text-sm mb-4" style={{ color: "var(--text-muted)" }}>
                     {proj.short}
                   </p>

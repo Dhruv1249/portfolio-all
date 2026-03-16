@@ -40,6 +40,7 @@ export interface Project {
   github: string;
   live?: string;
   image?: string;
+  period?: string;
 }
 
 export const featuredProjects: Project[] = [
@@ -54,6 +55,7 @@ export const featuredProjects: Project[] = [
     github: "https://github.com/Dhruv1249/Plant-Phenology-State-Detector",
     live: "https://plant-phenology-state-detector.vercel.app/",
     image: "/calyx.png",
+    period: "Oct '25 — Nov '25",
   },
   {
     title: "UrbanSwap",
@@ -65,6 +67,7 @@ export const featuredProjects: Project[] = [
     github: "https://github.com/Dhruv1249/ai-marketplace-assistant",
     live: "https://ai-marketplace-assistant-162648101104.asia-south1.run.app/",
     image: "/urbanswap.png",
+    period: "Sep '25",
   },
   {
     title: "PR Tracker",
@@ -76,6 +79,7 @@ export const featuredProjects: Project[] = [
     github: "https://github.com/Dhruv1249/Pr-Tracker",
     live: "https://pr-tracker-client.vercel.app/",
     image: "/pr-tracker.png",
+    period: "Jan '26 — Feb '26",
   },
 ];
 
@@ -85,6 +89,7 @@ export interface AdditionalProject {
   tech: string[];
   github: string;
   live?: string;
+  period?: string;
 }
 
 export const additionalProjects: AdditionalProject[] = [
@@ -94,12 +99,14 @@ export const additionalProjects: AdditionalProject[] = [
     tech: ["React", "Node.js", "MongoDB", "REST"],
     github: "https://github.com/Dhruv1249/expense-react-client",
     live: "https://expense-react-client.vercel.app/",
+    period: "Jan '26",
   },
   {
     title: "Neovim Config",
     short: "Custom dev environment with LSP, plugins & keybindings",
     tech: ["Lua", "Neovim", "LSP"],
     github: "https://github.com/Dhruv1249/my-customized-nvim-config",
+    period: "Jan '26 — Present",
   },
 ];
 
@@ -132,7 +139,7 @@ export const allTechNames = [
 export const experience = {
   role: "Freelance Full-Stack Developer",
   company: "Remote",
-  period: "Nov 2025 – Present",
+  period: "Nov '25 — Present",
   bullets: [
     "Developed responsive client websites focusing on UI/UX, mobile-first layouts, and performance optimization.",
     "Built front-end systems using Next.js, Tailwind CSS, and semantic HTML/CSS with a focus on accessibility and clean component architecture.",
@@ -173,12 +180,14 @@ export const achievements = [
     award: "Global Honorable Mention",
     detail: "One of the top 23 teams worldwide out of 11,000+ submissions",
     icon: "🏆",
+    period: "Nov '25",
   },
   {
     title: "Innov-a-thon (NIT Rourkela)",
     award: "National Top 100",
     detail: "Competitive hackathon — rapid prototyping & system design",
     icon: "🥇",
+    period: "Oct '25",
   },
 ];
 
@@ -187,12 +196,14 @@ export const certifications = [
     title: "Cloud Computing",
     issuer: "NPTEL",
     link: "https://drive.google.com/file/d/1oC01o8KJWbJgoAvF1imNXfG5KLEQgu9r/view?usp=sharing",
-    image: "/cloud.png"
+    image: "/cloud.png",
+    period: "Apr '25",
   },
   {
     title: "Introduction to Large Language Models",
     issuer: "NPTEL",
     link: "https://drive.google.com/file/d/1Ypk5IU8V_YzrDsZ1wsVm00OnfqWnwZol/view?usp=sharing",
-    image: "/llm.png"
+    image: "/llm.png",
+    period: "Apr '25",
   },
 ];
