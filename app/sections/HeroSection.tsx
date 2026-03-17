@@ -109,8 +109,7 @@ export default function HeroSection() {
             </a>
             <a
               href={personalInfo.resume}
-              target="_blank"
-              rel="noopener noreferrer"
+              download="Dhruv_Resume.pdf"
               className="px-8 py-3.5 rounded-xl text-sm font-semibold inline-flex items-center gap-2 transition-all duration-400"
               style={{
                 color: "var(--accent)",
@@ -130,7 +129,7 @@ export default function HeroSection() {
                 e.currentTarget.style.boxShadow = "none";
               }}
             >
-              <FileText size={16} /> View CV
+              <FileText size={16} /> Download CV
             </a>
             <a
               href="#contact"

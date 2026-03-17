@@ -74,8 +74,7 @@ export default function Navbar() {
           ))}
           <motion.a
             href={personalInfo.resume}
-            target="_blank"
-            rel="noopener noreferrer"
+            download="Dhruv_Resume.pdf"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.75 }}
@@ -312,8 +311,7 @@ export default function Navbar() {
               ))}
               <motion.a
                 href={personalInfo.resume}
-                target="_blank"
-                rel="noopener noreferrer"
+                download="Dhruv_Resume.pdf"
                 onClick={() => setMobileOpen(false)}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}

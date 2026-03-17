@@ -9,7 +9,7 @@ export const personalInfo = {
   phone: "+91 7876503573",
   github: "https://github.com/Dhruv1249",
   linkedin: "https://linkedin.com/in/dhruv-ds",
-  resume: "https://drive.google.com/file/d/15CVRIhP6VVB5kUqO5F8Q3rXjhrVvOvqI/view?usp=sharing",
+  resume: "https://drive.google.com/uc?export=download&id=1o-ec9gvMQjyXs09q_XlcKj9pg4hgCIqx",
 };
 
 export const aboutText =
