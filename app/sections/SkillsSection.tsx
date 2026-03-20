@@ -124,11 +124,11 @@ export default function SkillsSection() {
                   {category.title}
                 </h3>
                 {/* Flex layout for symmetry — centers rows naturally */}
-                <div className="flex flex-wrap justify-center gap-4">
+                <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
                   {category.skills.map((skill) => (
                     <motion.div
                       key={skill.name}
-                      className="skill-icon-card w-[28%] min-w-[75px]"
+                      className="skill-icon-card w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.75rem)] min-w-[84px]"
                       whileHover={{ scale: 1.08, y: -6 }}
                       transition={{ type: "spring", stiffness: 400, damping: 20 }}
                     >
@@ -154,13 +154,13 @@ export default function SkillsSection() {
       </div>
 
       {/* Moving Icon Trail */}
-      <div className="mt-20 py-10 space-y-5 overflow-hidden">
+      <div className="mt-16 md:mt-20 py-8 md:py-10 space-y-4 md:space-y-5 overflow-hidden">
         <div className="overflow-hidden">
-          <div className="marquee-track flex gap-6 w-max">
+          <div className="marquee-track flex gap-4 md:gap-6 w-max">
             {trailRow1.map((skill, i) => (
               <div
                 key={`r1-${skill.name}-${i}`}
-                className="flex items-center gap-3 px-5 py-3 rounded-full shrink-0"
+                className="flex items-center gap-2.5 md:gap-3 px-4 md:px-5 py-2.5 md:py-3 rounded-full shrink-0"
                 style={{
                   background: "rgba(255,255,255,0.02)",
                   border: "1px solid var(--border-subtle)",
@@ -178,11 +178,11 @@ export default function SkillsSection() {
           </div>
         </div>
         <div className="overflow-hidden">
-          <div className="marquee-track-reverse flex gap-6 w-max">
+          <div className="marquee-track-reverse flex gap-4 md:gap-6 w-max">
             {trailRow2.map((skill, i) => (
               <div
                 key={`r2-${skill.name}-${i}`}
-                className="flex items-center gap-3 px-5 py-3 rounded-full shrink-0"
+                className="flex items-center gap-2.5 md:gap-3 px-4 md:px-5 py-2.5 md:py-3 rounded-full shrink-0"
                 style={{
                   background: "rgba(255,255,255,0.02)",
                   border: "1px solid var(--border-subtle)",

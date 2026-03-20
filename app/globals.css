@@ -31,7 +31,7 @@
 /* ─── Base ────────────────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
-  font-size: calc(20px * var(--font-scale));
+  font-size: calc(100% * var(--font-scale));
 }
 
 body {

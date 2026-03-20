@@ -7,7 +7,7 @@ export default function TechPortfolioSection() {
   const techPortfolioUrl = process.env.NEXT_PUBLIC_TECH_PORTFOLIO_URL || "https://dhruv-portfolio-os.vercel.app";
 
   return (
-    <section className="relative py-24 mb-16 overflow-hidden">
+    <section className="relative py-16 md:py-24 mb-12 md:mb-16 overflow-hidden">
       {/* Background Grid & Glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)] opacity-20" />
@@ -25,7 +25,7 @@ export default function TechPortfolioSection() {
         >
           <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-secondary)] rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
           
-          <div className="relative bg-[var(--bg-card)] backdrop-blur-md border border-[var(--border-hover)] rounded-2xl p-8 md:p-12 overflow-hidden shadow-2xl transition-all duration-500 group-hover:border-[var(--accent)] group-hover:-translate-y-1">
+          <div className="relative bg-[var(--bg-card)] backdrop-blur-md border border-[var(--border-hover)] rounded-2xl p-6 sm:p-8 md:p-12 overflow-hidden shadow-2xl transition-all duration-500 group-hover:border-[var(--accent)] group-hover:-translate-y-1">
             
             {/* Corner Accents */}
             <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-[var(--accent)] opacity-50 rounded-tl-2xl" />
@@ -45,12 +45,12 @@ export default function TechPortfolioSection() {
                 </p>
               </div>
 
-              <div className="flex items-center gap-4 text-[var(--accent)] font-medium mt-4 bg-[var(--accent-dim)] px-6 py-3 rounded-xl border border-[var(--accent-glow)] group-hover:bg-[var(--accent)] group-hover:text-[var(--bg-primary)] transition-all duration-300">
+              <div className="flex items-center gap-3 sm:gap-4 text-[var(--accent)] font-medium mt-4 bg-[var(--accent-dim)] px-5 sm:px-6 py-3 rounded-xl border border-[var(--accent-glow)] group-hover:bg-[var(--accent)] group-hover:text-[var(--bg-primary)] transition-all duration-300">
                 <span>Boot System</span>
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </div>
 
-              <div className="flex gap-6 mt-6 opacity-60">
+              <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mt-6 opacity-60">
                 <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]"><Code size={16} /> React</div>
                 <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]"><Monitor size={16} /> OS UI</div>
                 <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]"><Cpu size={16} /> CLI</div>

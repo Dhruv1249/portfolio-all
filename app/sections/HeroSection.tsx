@@ -17,7 +17,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6">
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4 sm:px-6">
       {/* Ambient background glows */}
       <div className="absolute inset-0 pointer-events-none">
         <div
@@ -52,7 +52,7 @@ export default function HeroSection() {
 
       {/* Hero content — text left (or centered), photo right */}
       {photoVisible !== null && (
-        <div className={`relative z-10 w-full flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20 ${photoVisible ? 'max-w-6xl' : 'max-w-4xl justify-center'}`}>
+        <div className={`relative z-10 w-full flex flex-col-reverse md:flex-row items-center gap-10 md:gap-20 ${photoVisible ? 'max-w-6xl' : 'max-w-4xl justify-center'}`}>
         {/* Text Column */}
         <div className={`flex-1 ${photoVisible ? 'text-center md:text-left' : 'text-center flex flex-col items-center'}`}>
           <motion.div
@@ -67,7 +67,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.4, 0.25, 1] }}
-            className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tighter leading-[0.9]"
+            className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter leading-[0.9]"
           >
             <span className="gradient-text">{personalInfo.name}</span>
             <span style={{ color: "var(--accent)" }}>.</span>
@@ -102,7 +102,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.9 }}
-            className={`mt-10 flex flex-wrap gap-4 ${photoVisible ? 'justify-center md:justify-start' : 'justify-center'}`}
+            className={`mt-8 md:mt-10 flex flex-wrap gap-3 sm:gap-4 ${photoVisible ? 'justify-center md:justify-start' : 'justify-center'}`}
           >
             <a href="#projects" className="form-button inline-flex items-center gap-2">
               View Projects
@@ -110,7 +110,7 @@ export default function HeroSection() {
             <a
               href={personalInfo.resume}
               download="Dhruv_Resume.pdf"
-              className="px-8 py-3.5 rounded-xl text-sm font-semibold inline-flex items-center gap-2 transition-all duration-400"
+              className="px-6 sm:px-8 py-3 rounded-xl text-sm font-semibold inline-flex items-center gap-2 transition-all duration-400"
               style={{
                 color: "var(--accent)",
                 border: "1px solid var(--accent-glow)",
@@ -133,7 +133,7 @@ export default function HeroSection() {
             </a>
             <a
               href="#contact"
-              className="px-8 py-3.5 rounded-xl text-sm font-semibold transition-all duration-400"
+              className="px-6 sm:px-8 py-3 rounded-xl text-sm font-semibold transition-all duration-400"
               style={{
                 color: "var(--text-secondary)",
                 border: "1px solid var(--border-subtle)",
@@ -165,7 +165,7 @@ export default function HeroSection() {
             className="flex-shrink-0"
           >
             <div
-              className="relative w-56 h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full overflow-hidden"
+              className="relative w-52 h-52 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full overflow-hidden"
               style={{
                 border: "3px solid var(--accent)",
                 boxShadow: "0 0 60px var(--accent-glow), 0 0 120px var(--accent-dim)",

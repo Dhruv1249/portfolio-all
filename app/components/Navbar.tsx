@@ -38,7 +38,6 @@ export default function Navbar() {
   const themeRef = useRef<HTMLDivElement>(null);
   const moreRef = useRef<HTMLDivElement>(null);
   const measureRefs = useRef<Array<HTMLSpanElement | null>>([]);
-  const lastLogRef = useRef<string>("");
   const visibleCountRef = useRef(visibleCount);
   const rafIdRef = useRef<number | null>(null);
 
@@ -83,10 +82,17 @@ export default function Navbar() {
   useLayoutEffect(() => {
     const MIN_GAP = 24;
     const HYSTERESIS = 8;
-    const debug = process.env.NODE_ENV !== "production";
 
     const recompute = () => {
       rafIdRef.current = null;
+
+      if (!window.matchMedia("(min-width: 768px)").matches) {
+        if (visibleCountRef.current !== desktopItems.length) {
+          visibleCountRef.current = desktopItems.length;
+          setVisibleCount(desktopItems.length);
+        }
+        return;
+      }
 
       if (!logoRef.current || !navItemsRef.current || !controlsRef.current) return;
 
@@ -100,18 +106,8 @@ export default function Navbar() {
       const leftGap = itemsRect.left - logoRect.right;
       const rightGap = controlsRect.left - itemsRect.right;
 
-      const overflowCount = desktopItems.length - currentCount;
-      const baseLog = `[navbar-recompute] leftGap=${leftGap.toFixed(2)} rightGap=${rightGap.toFixed(2)} visibleCount=${currentCount} overflow=${overflowCount}`;
-
       // If nav items get too close to logo OR controls, move one item into More.
       if ((leftGap < MIN_GAP || rightGap < MIN_GAP) && currentCount > 0) {
-        if (debug) {
-          const msg = `${baseLog} action=collapse`;
-          if (msg !== lastLogRef.current) {
-            console.log(msg);
-            lastLogRef.current = msg;
-          }
-        }
         setVisibleCount((count) => {
           const next = Math.max(0, count - 1);
           visibleCountRef.current = next;
@@ -132,37 +128,15 @@ export default function Navbar() {
         const requiredLeftGap = nextItemWidth + itemGap + MIN_GAP;
 
         if (leftGap <= requiredLeftGap) {
-          if (debug) {
-            const msg = `${baseLog} action=hold-expand-blocked requiredLeft=${requiredLeftGap.toFixed(2)}`;
-            if (msg !== lastLogRef.current) {
-              console.log(msg);
-              lastLogRef.current = msg;
-            }
-          }
           return;
         }
 
-        if (debug) {
-          const msg = `${baseLog} action=expand`;
-          if (msg !== lastLogRef.current) {
-            console.log(msg);
-            lastLogRef.current = msg;
-          }
-        }
         setVisibleCount((count) => {
           const next = Math.min(desktopItems.length, count + 1);
           visibleCountRef.current = next;
           return next;
         });
         return;
-      }
-
-      if (debug) {
-        const msg = `${baseLog} action=hold`;
-        if (msg !== lastLogRef.current) {
-          console.log(msg);
-          lastLogRef.current = msg;
-        }
       }
     };
 
@@ -653,7 +627,15 @@ export default function Navbar() {
               borderBottom: "1px solid var(--border-subtle)",
             }}
           >
-            <div className="px-6 py-6 flex flex-col gap-4">
+            <div
+              className="px-6 py-6 flex flex-col gap-4"
+              style={{
+                maxHeight: "calc(100dvh - 5rem)",
+                overflowY: "auto",
+                overscrollBehavior: "contain",
+                paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))",
+              }}
+            >
               {navLinks.map((link, i) => (
                 <motion.a
                   key={link.href}
@@ -799,7 +781,7 @@ export default function Navbar() {
                   <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "12px" }}>
                     Particles
                   </p>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "8px" }}>
                     {[
                       { id: "none", name: "None" },
                       { id: "nodes", name: "Nodes" },
