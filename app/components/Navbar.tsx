@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, FileText, Palette, Check } from "lucide-react";
+import { Menu, X, FileText, Palette, Check, ChevronDown } from "lucide-react";
 import { personalInfo } from "../data/portfolio-data";
 import { useTheme, COLOR_PROFILES } from "../contexts/ThemeContext";
 
@@ -14,13 +14,44 @@ const navLinks = [
   { label: "Achievements", href: "#achievements" },
 ];
 
+const desktopItems = [
+  ...navLinks,
+  { label: "Resume", href: personalInfo.resume, download: "Dhruv_Resume.pdf" },
+];
+
 export default function Navbar() {
+  const FONT_MIN = 70;
+  const FONT_MAX = 160;
+
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(desktopItems.length);
   const [pendingFontScale, setPendingFontScale] = useState(1);
+
+  const navRef = useRef<HTMLDivElement>(null);
+  const desktopNavRowRef = useRef<HTMLDivElement>(null);
+  const navItemsRef = useRef<HTMLDivElement>(null);
+  const logoRef = useRef<HTMLAnchorElement>(null);
+  const controlsRef = useRef<HTMLDivElement>(null);
   const themeRef = useRef<HTMLDivElement>(null);
+  const moreRef = useRef<HTMLDivElement>(null);
+  const measureRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const lastLogRef = useRef<string>("");
+  const visibleCountRef = useRef(visibleCount);
+  const rafIdRef = useRef<number | null>(null);
+
   const { activeProfile, setProfile, animations, setAnimations, particleMode, setParticleMode, fontScale, applyFontScale } = useTheme();
+
+  const visibleItems = desktopItems.slice(0, visibleCount);
+  const overflowItems = desktopItems.slice(visibleCount);
+
+  useEffect(() => {
+    if (overflowItems.length === 0 && moreOpen) {
+      setMoreOpen(false);
+    }
+  }, [overflowItems.length, moreOpen]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -28,11 +59,13 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close theme dropdown on click outside
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (themeRef.current && !themeRef.current.contains(e.target as Node)) {
         setThemeOpen(false);
+      }
+      if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
+        setMoreOpen(false);
       }
     };
     document.addEventListener("mousedown", handler);
@@ -43,12 +76,127 @@ export default function Navbar() {
     setPendingFontScale(fontScale);
   }, [fontScale]);
 
+  useEffect(() => {
+    visibleCountRef.current = visibleCount;
+  }, [visibleCount]);
+
+  useLayoutEffect(() => {
+    const MIN_GAP = 24;
+    const HYSTERESIS = 8;
+    const debug = process.env.NODE_ENV !== "production";
+
+    const recompute = () => {
+      rafIdRef.current = null;
+
+      if (!logoRef.current || !navItemsRef.current || !controlsRef.current) return;
+
+      const currentCount = visibleCountRef.current;
+
+      const logoRect = logoRef.current.getBoundingClientRect();
+      const itemsRect = navItemsRef.current.getBoundingClientRect();
+      const controlsRect = controlsRef.current.getBoundingClientRect();
+      const itemGap = parseFloat(getComputedStyle(navItemsRef.current).gap || "24");
+
+      const leftGap = itemsRect.left - logoRect.right;
+      const rightGap = controlsRect.left - itemsRect.right;
+
+      const overflowCount = desktopItems.length - currentCount;
+      const baseLog = `[navbar-recompute] leftGap=${leftGap.toFixed(2)} rightGap=${rightGap.toFixed(2)} visibleCount=${currentCount} overflow=${overflowCount}`;
+
+      // If nav items get too close to logo OR controls, move one item into More.
+      if ((leftGap < MIN_GAP || rightGap < MIN_GAP) && currentCount > 0) {
+        if (debug) {
+          const msg = `${baseLog} action=collapse`;
+          if (msg !== lastLogRef.current) {
+            console.log(msg);
+            lastLogRef.current = msg;
+          }
+        }
+        setVisibleCount((count) => {
+          const next = Math.max(0, count - 1);
+          visibleCountRef.current = next;
+          return next;
+        });
+        return;
+      }
+
+      // If there is safe extra room on both sides, bring one item back out of More.
+      if (
+        leftGap > MIN_GAP + HYSTERESIS &&
+        rightGap > MIN_GAP + HYSTERESIS &&
+        currentCount < desktopItems.length
+      ) {
+        const nextItem = desktopItems[currentCount];
+        const nextLabelWidth = measureRefs.current[currentCount]?.offsetWidth ?? 92;
+        const nextItemWidth = nextLabelWidth + (nextItem?.label === "Resume" ? 22 : 0);
+        const requiredLeftGap = nextItemWidth + itemGap + MIN_GAP;
+
+        if (leftGap <= requiredLeftGap) {
+          if (debug) {
+            const msg = `${baseLog} action=hold-expand-blocked requiredLeft=${requiredLeftGap.toFixed(2)}`;
+            if (msg !== lastLogRef.current) {
+              console.log(msg);
+              lastLogRef.current = msg;
+            }
+          }
+          return;
+        }
+
+        if (debug) {
+          const msg = `${baseLog} action=expand`;
+          if (msg !== lastLogRef.current) {
+            console.log(msg);
+            lastLogRef.current = msg;
+          }
+        }
+        setVisibleCount((count) => {
+          const next = Math.min(desktopItems.length, count + 1);
+          visibleCountRef.current = next;
+          return next;
+        });
+        return;
+      }
+
+      if (debug) {
+        const msg = `${baseLog} action=hold`;
+        if (msg !== lastLogRef.current) {
+          console.log(msg);
+          lastLogRef.current = msg;
+        }
+      }
+    };
+
+    const run = () => {
+      if (rafIdRef.current !== null) return;
+      rafIdRef.current = window.requestAnimationFrame(recompute);
+    };
+
+    run();
+
+    const ro = new ResizeObserver(run);
+    if (navRef.current) ro.observe(navRef.current);
+    if (desktopNavRowRef.current) ro.observe(desktopNavRowRef.current);
+    if (navItemsRef.current) ro.observe(navItemsRef.current);
+    if (controlsRef.current) ro.observe(controlsRef.current);
+    if (logoRef.current) ro.observe(logoRef.current);
+    window.addEventListener("resize", run);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", run);
+      if (rafIdRef.current !== null) {
+        window.cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
+    };
+  }, [fontScale]);
+
   return (
     <motion.nav
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.4, 0.25, 1] }}
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+      className="sticky top-0 left-0 right-0 z-50 transition-all duration-500"
       style={{
         background: scrolled ? "rgba(5, 5, 5, 0.7)" : "transparent",
         backdropFilter: scrolled ? "blur(20px) saturate(180%)" : "none",
@@ -56,106 +204,227 @@ export default function Navbar() {
         borderBottom: scrolled ? "1px solid var(--border-subtle)" : "1px solid transparent",
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between h-20 md:h-24">
+      <div
+        style={{
+          position: "fixed",
+          top: -9999,
+          left: -9999,
+          visibility: "hidden",
+          pointerEvents: "none",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {desktopItems.map((item, i) => (
+          <span
+            key={`measure-${item.label}`}
+            ref={(el) => {
+              measureRefs.current[i] = el;
+            }}
+            style={{ fontSize: "1.1rem", fontWeight: 500 }}
+          >
+            {item.label}
+          </span>
+        ))}
+      </div>
+
+      <div
+        ref={navRef}
+        className="max-w-7xl mx-auto px-6 md:px-12 flex items-center h-20 md:h-24"
+        style={{ gap: "2rem", justifyContent: "space-between" }}
+      >
         {/* Logo */}
-        <a href="#" className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)", fontSize: '1.5rem' }}>
+        <a
+          ref={logoRef}
+          href="#"
+          className="text-2xl font-bold tracking-tight"
+          style={{ color: "var(--text-primary)", fontSize: "1.5rem", whiteSpace: "nowrap", flexShrink: 0 }}
+        >
           Dhruv<span style={{ color: "var(--accent)" }}>.</span>
         </a>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link, i) => (
-            <motion.a
-              key={link.href}
-              href={link.href}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 + i * 0.08 }}
-              className="text-base font-medium tracking-wide transition-colors duration-300 hover:text-[var(--accent)]"
-              style={{ color: "var(--text-muted)", fontSize: '1.1rem' }}
-            >
-              {link.label}
-            </motion.a>
-          ))}
-          <motion.a
-            href={personalInfo.resume}
-            download="Dhruv_Resume.pdf"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.75 }}
-            className="text-base font-medium tracking-wide inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-[var(--accent)]"
-            style={{ color: "var(--text-muted)", fontSize: '1.1rem' }}
-          >
-            <FileText size={18} /> Resume
-          </motion.a>
+        <div
+          ref={desktopNavRowRef}
+          className="hidden md:flex items-center"
+          style={{ flex: 1, justifyContent: "flex-end", gap: "1.5rem", minWidth: 0, overflow: "visible" }}
+        >
+          <div ref={navItemsRef} style={{ display: "flex", alignItems: "center", gap: "1.5rem", flexShrink: 0 }}>
+            {/* Visible nav items */}
+            {visibleItems.map((item, i) => (
+              <motion.a
+                key={item.href}
+                href={item.href}
+                download={item.label === "Resume" ? "Dhruv_Resume.pdf" : undefined}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + i * 0.08 }}
+                className="transition-colors duration-300 hover:text-[var(--accent)] inline-flex items-center"
+                style={{
+                  color: "var(--text-muted)",
+                  fontSize: "1.1rem",
+                  fontWeight: 500,
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                  textDecoration: "none",
+                  gap: item.label === "Resume" ? "0.35rem" : 0,
+                }}
+              >
+                {item.label === "Resume" && <FileText size={17} />}
+                {item.label}
+              </motion.a>
+            ))}
 
-          {/* Theme Selector */}
-          <div ref={themeRef} style={{ position: "relative" }}>
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8 }}
-              onClick={() => setThemeOpen(!themeOpen)}
-              className="text-base font-medium tracking-wide inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-[var(--accent)]"
-              style={{ color: "var(--text-muted)", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: '1.1rem' }}
-            >
-              <Palette size={18} /> Theme
-            </motion.button>
-
-            <AnimatePresence>
-              {themeOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
+            {/* More dropdown */}
+            {overflowItems.length > 0 && (
+              <div ref={moreRef} style={{ position: "relative", flexShrink: 0 }}>
+                <button
+                  onClick={() => setMoreOpen((v) => !v)}
+                  className="inline-flex items-center gap-1 transition-colors duration-300 hover:text-[var(--accent)]"
                   style={{
-                    position: "absolute",
-                    top: "calc(100% + 12px)",
-                    right: 0,
-                    width: "280px",
-                    background: "var(--bg-secondary)",
-                    border: "1px solid var(--border-subtle)",
-                    borderRadius: "16px",
-                    padding: "12px",
-                    boxShadow: "0 24px 64px rgba(0,0,0,0.5)",
-                    backdropFilter: "blur(20px)",
-                    zIndex: 100,
+                    color: "var(--text-muted)",
+                    fontSize: "1rem",
+                    fontWeight: 500,
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  <p style={{ fontSize: "12px", letterSpacing: "0.05em", color: "var(--text-muted)", marginBottom: "8px", padding: "0 4px" }}>
-                    Color Profile
-                  </p>
-                  {COLOR_PROFILES.map((profile) => {
-                    const isActive = activeProfile.id === profile.id;
-                    return (
-                      <div
-                        key={profile.id}
-                        onClick={() => {
-                          setProfile(profile.id);
-                          setThemeOpen(false);
-                        }}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          padding: "10px 12px",
-                          borderRadius: "10px",
-                          cursor: "pointer",
-                          background: isActive ? "var(--accent-dim)" : "transparent",
-                          transition: "background 0.2s",
-                          marginBottom: "2px",
-                        }}
-                      >
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                          <div style={{ display: "flex", gap: "3px" }}>
-                            {profile.preview.slice(0, 2).map((color, i) => (
-                              <div key={i} style={{ width: "16px", height: "16px", borderRadius: "4px", background: color, border: "1px solid rgba(255,255,255,0.1)" }} />
-                            ))}
-                          </div>
-                          <span style={{ fontSize: "13px", fontWeight: 500, color: isActive ? "var(--accent)" : "var(--text-secondary)" }}>
-                            {profile.name}
-                          </span>
+                  More <ChevronDown size={15} />
+                </button>
+
+                <AnimatePresence>
+                  {moreOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                      transition={{ duration: 0.18 }}
+                      style={{
+                        position: "absolute",
+                        top: "calc(100% + 12px)",
+                        right: 0,
+                        width: "220px",
+                        background: "var(--bg-secondary)",
+                        border: "1px solid var(--border-subtle)",
+                        borderRadius: "12px",
+                        padding: "8px",
+                        backdropFilter: "blur(16px)",
+                        boxShadow: "0 20px 48px rgba(0,0,0,0.45)",
+                        zIndex: 120,
+                      }}
+                    >
+                      {overflowItems.map((item) => (
+                        <a
+                          key={item.href}
+                          href={item.href}
+                          download={item.label === "Resume" ? "Dhruv_Resume.pdf" : undefined}
+                          onClick={() => setMoreOpen(false)}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            padding: "9px 12px",
+                            borderRadius: "8px",
+                            color: "var(--text-secondary)",
+                            textDecoration: "none",
+                            fontSize: "0.95rem",
+                            fontWeight: 500,
+                            transition: "background 0.15s",
+                          }}
+                          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--accent-dim)")}
+                          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                        >
+                          {item.label === "Resume" && <FileText size={15} />}
+                          {item.label}
+                        </a>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+          </div>
+
+          {/* Static controls: Theme + Get in Touch — measured via controlsRef */}
+          <div
+            ref={controlsRef}
+            style={{ display: "flex", alignItems: "center", gap: "1.5rem", flexShrink: 0 }}
+          >
+            {/* Theme Selector */}
+            <div ref={themeRef} style={{ position: "relative" }}>
+              <motion.button
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8 }}
+                onClick={() => setThemeOpen(!themeOpen)}
+                className="inline-flex items-center gap-1.5 transition-colors duration-300 hover:text-[var(--accent)]"
+                style={{
+                  color: "var(--text-muted)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  fontSize: "1.1rem",
+                  fontWeight: 500,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <Palette size={18} /> Theme
+              </motion.button>
+
+              <AnimatePresence>
+                {themeOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    style={{
+                      position: "absolute",
+                      top: "calc(100% + 12px)",
+                      right: 0,
+                      width: "280px",
+                      background: "var(--bg-secondary)",
+                      border: "1px solid var(--border-subtle)",
+                      borderRadius: "16px",
+                      padding: "12px",
+                      boxShadow: "0 24px 64px rgba(0,0,0,0.5)",
+                      backdropFilter: "blur(20px)",
+                      zIndex: 100,
+                    }}
+                  >
+                    <p style={{ fontSize: "12px", letterSpacing: "0.05em", color: "var(--text-muted)", marginBottom: "8px", padding: "0 4px" }}>
+                      Color Profile
+                    </p>
+                    {COLOR_PROFILES.map((profile) => {
+                      const isActive = activeProfile.id === profile.id;
+                      return (
+                        <div
+                          key={profile.id}
+                          onClick={() => { setProfile(profile.id); setThemeOpen(false); }}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            padding: "10px 12px",
+                            borderRadius: "10px",
+                            cursor: "pointer",
+                            background: isActive ? "var(--accent-dim)" : "transparent",
+                            transition: "background 0.2s",
+                            marginBottom: "2px",
+                          }}
+                        >
+                          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <div style={{ display: "flex", gap: "3px" }}>
+                              {profile.preview.slice(0, 2).map((color, i) => (
+                                <div key={i} style={{ width: "16px", height: "16px", borderRadius: "4px", background: color, border: "1px solid rgba(255,255,255,0.1)" }} />
+                              ))}
+                            </div>
+                            <span style={{ fontSize: "13px", fontWeight: 500, color: isActive ? "var(--accent)" : "var(--text-secondary)" }}>
+                              {profile.name}
+                            </span>
                           </div>
                           {isActive && <Check size={14} style={{ color: "var(--accent)" }} />}
                         </div>
@@ -163,7 +432,7 @@ export default function Navbar() {
                     })}
 
                     <div style={{ height: "1px", background: "var(--border-subtle)", margin: "8px 0" }} />
-                    
+
                     <div
                       onClick={() => setAnimations(!animations)}
                       style={{
@@ -211,14 +480,47 @@ export default function Navbar() {
                     <div style={{ padding: "6px 4px 10px" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                         <span style={{ fontSize: "12px", color: "var(--text-secondary)" }}>Scale</span>
-                        <span style={{ fontSize: "12px", color: "var(--accent)", fontFamily: "monospace", fontWeight: 600 }}>
-                          {Math.round(pendingFontScale * 100)}%
-                        </span>
+                        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                          <input
+                            className="font-scale-input"
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            min={FONT_MIN}
+                            max={FONT_MAX}
+                            step={1}
+                            value={Math.round(pendingFontScale * 100)}
+                            onChange={(e) => {
+                              const val = parseInt(e.target.value, 10);
+                              if (!Number.isNaN(val)) {
+                                setPendingFontScale(val / 100);
+                              }
+                            }}
+                            onBlur={(e) => {
+                              const val = parseInt(e.target.value || `${FONT_MIN}`, 10);
+                              const clamped = Math.max(FONT_MIN, Math.min(FONT_MAX, Number.isNaN(val) ? FONT_MIN : val));
+                              setPendingFontScale(clamped / 100);
+                            }}
+                            style={{
+                              width: "62px",
+                              color: "var(--accent)",
+                              background: "transparent",
+                              border: "1px solid var(--border-subtle)",
+                              borderRadius: "6px",
+                              fontWeight: 700,
+                              fontSize: "0.875rem",
+                              fontFamily: "monospace",
+                              textAlign: "right",
+                              padding: "4px 6px",
+                            }}
+                          />
+                          <span style={{ color: "var(--accent)", fontSize: "0.875rem", fontWeight: 700 }}>%</span>
+                        </div>
                       </div>
                       <input
                         type="range"
-                        min="70"
-                        max="160"
+                        min={FONT_MIN}
+                        max={FONT_MAX}
                         value={Math.round(pendingFontScale * 100)}
                         onChange={(e) => setPendingFontScale(parseInt(e.target.value, 10) / 100)}
                         style={{
@@ -251,21 +553,21 @@ export default function Navbar() {
                         Apply
                       </button>
                     </div>
-                    
+
                     <div style={{ height: "1px", background: "var(--border-subtle)", margin: "8px 0" }} />
                     <p style={{ fontSize: "0.75rem", letterSpacing: "0.05em", color: "var(--text-muted)", marginBottom: "0.5rem", padding: "0 0.25rem" }}>
                       Particles
                     </p>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "4px" }}>
                       {[
-                        { id: 'none', name: 'None' },
-                        { id: 'nodes', name: 'Nodes' },
-                        { id: 'rain', name: 'Rain' },
-                        { id: 'floatinglines', name: 'Lines' },
-                        { id: 'starfield', name: 'Stars' },
-                        { id: 'galaxy', name: 'Galaxy' },
-                        { id: 'threads', name: 'Threads' },
-                        { id: 'lightrays', name: 'Rays' },
+                        { id: "none", name: "None" },
+                        { id: "nodes", name: "Nodes" },
+                        { id: "rain", name: "Rain" },
+                        { id: "floatinglines", name: "Lines" },
+                        { id: "starfield", name: "Stars" },
+                        { id: "galaxy", name: "Galaxy" },
+                        { id: "threads", name: "Threads" },
+                        { id: "lightrays", name: "Rays" },
                       ].map((effect) => {
                         const isActive = particleMode === effect.id;
                         return (
@@ -290,35 +592,39 @@ export default function Navbar() {
                     </div>
                   </motion.div>
                 )}
-            </AnimatePresence>
-          </div>
+              </AnimatePresence>
+            </div>
 
-          <motion.a
-            href="#contact"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.85 }}
-          className="text-sm font-semibold tracking-wide px-5 py-2.5 rounded-xl transition-all duration-300"
-          style={{
-            background: "var(--accent-dim)",
-            color: "var(--accent)",
-            border: "1px solid var(--accent-glow)",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "var(--accent)";
-            e.currentTarget.style.color = "var(--bg-primary)";
-            e.currentTarget.style.transform = "translateY(-1px)";
-            e.currentTarget.style.boxShadow = "0 4px 20px var(--accent-glow)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "var(--accent-dim)";
-            e.currentTarget.style.color = "var(--accent)";
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow = "none";
-          }}
-        >
-          Get in Touch
-        </motion.a>
+            {/* Get in Touch */}
+            <motion.a
+              href="#contact"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.85 }}
+              className="text-sm font-semibold tracking-wide px-5 py-2.5 rounded-xl transition-all duration-300"
+              style={{
+                background: "var(--accent-dim)",
+                color: "var(--accent)",
+                border: "1px solid var(--accent-glow)",
+                whiteSpace: "nowrap",
+                textDecoration: "none",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--accent)";
+                e.currentTarget.style.color = "var(--bg-primary)";
+                e.currentTarget.style.transform = "translateY(-1px)";
+                e.currentTarget.style.boxShadow = "0 4px 20px var(--accent-glow)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "var(--accent-dim)";
+                e.currentTarget.style.color = "var(--accent)";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            >
+              Get in Touch
+            </motion.a>
+          </div>
         </div>
 
         {/* Mobile Toggle */}
@@ -370,7 +676,7 @@ export default function Navbar() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: navLinks.length * 0.06 }}
                 className="text-base font-medium tracking-wide py-2 inline-flex items-center gap-2 transition-colors hover:text-[var(--accent)]"
-                style={{ color: "var(--text-secondary)", fontSize: '1.1rem' }}
+                style={{ color: "var(--text-secondary)", fontSize: "1.1rem" }}
               >
                 <FileText size={18} /> Resume
               </motion.a>
@@ -386,9 +692,7 @@ export default function Navbar() {
                     return (
                       <div
                         key={profile.id}
-                        onClick={() => {
-                          setProfile(profile.id);
-                        }}
+                        onClick={() => setProfile(profile.id)}
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -420,14 +724,47 @@ export default function Navbar() {
                   <div style={{ display: "grid", gap: "10px", marginBottom: "14px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <span style={{ fontSize: "12px", color: "var(--text-secondary)" }}>Global Scale</span>
-                      <span style={{ fontSize: "12px", color: "var(--accent)", fontWeight: 600, fontFamily: "monospace" }}>
-                        {Math.round(pendingFontScale * 100)}%
-                      </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                        <input
+                          className="font-scale-input"
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          min={FONT_MIN}
+                          max={FONT_MAX}
+                          step={1}
+                          value={Math.round(pendingFontScale * 100)}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value, 10);
+                            if (!Number.isNaN(val)) {
+                              setPendingFontScale(val / 100);
+                            }
+                          }}
+                          onBlur={(e) => {
+                            const val = parseInt(e.target.value || `${FONT_MIN}`, 10);
+                            const clamped = Math.max(FONT_MIN, Math.min(FONT_MAX, Number.isNaN(val) ? FONT_MIN : val));
+                            setPendingFontScale(clamped / 100);
+                          }}
+                          style={{
+                            width: "62px",
+                            color: "var(--accent)",
+                            background: "transparent",
+                            border: "1px solid var(--border-subtle)",
+                            borderRadius: "6px",
+                            fontWeight: 700,
+                            fontSize: "0.875rem",
+                            fontFamily: "monospace",
+                            textAlign: "right",
+                            padding: "4px 6px",
+                          }}
+                        />
+                        <span style={{ color: "var(--accent)", fontSize: "0.875rem", fontWeight: 700 }}>%</span>
+                      </div>
                     </div>
                     <input
                       type="range"
-                      min="70"
-                      max="160"
+                      min={FONT_MIN}
+                      max={FONT_MAX}
                       value={Math.round(pendingFontScale * 100)}
                       onChange={(e) => setPendingFontScale(parseInt(e.target.value, 10) / 100)}
                       style={{
@@ -464,14 +801,14 @@ export default function Navbar() {
                   </p>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
                     {[
-                      { id: 'none', name: 'None' },
-                      { id: 'nodes', name: 'Nodes' },
-                      { id: 'rain', name: 'Rain' },
-                      { id: 'floatinglines', name: 'Lines' },
-                      { id: 'starfield', name: 'Stars' },
-                      { id: 'galaxy', name: 'Galaxy' },
-                      { id: 'threads', name: 'Threads' },
-                      { id: 'lightrays', name: 'Rays' },
+                      { id: "none", name: "None" },
+                      { id: "nodes", name: "Nodes" },
+                      { id: "rain", name: "Rain" },
+                      { id: "floatinglines", name: "Lines" },
+                      { id: "starfield", name: "Stars" },
+                      { id: "galaxy", name: "Galaxy" },
+                      { id: "threads", name: "Threads" },
+                      { id: "lightrays", name: "Rays" },
                     ].map((effect) => {
                       const isActive = particleMode === effect.id;
                       return (

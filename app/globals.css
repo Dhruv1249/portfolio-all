@@ -42,6 +42,17 @@ body {
   line-height: 1.6;
 }
 
+.font-scale-input {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.font-scale-input::-webkit-outer-spin-button,
+.font-scale-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 ::selection {
   background: var(--accent);
   color: var(--bg-primary);
