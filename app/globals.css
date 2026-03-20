@@ -2,6 +2,7 @@
 
 /* ─── Design Tokens ──────────────────────────────────────────────────────── */
 :root {
+  --font-scale: 1;
   --bg-primary: #050505;
   --bg-secondary: #0a0a0a;
   --bg-card: rgba(17, 17, 17, 0.6);
@@ -30,7 +31,7 @@
 /* ─── Base ────────────────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
-  font-size: 20px;
+  font-size: calc(20px * var(--font-scale));
 }
 
 body {

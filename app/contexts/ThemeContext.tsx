@@ -180,6 +180,8 @@ interface ThemeContextType {
   setAnimations: (val: boolean) => void;
   particleMode: string;
   setParticleMode: (mode: string) => void;
+  fontScale: number;
+  applyFontScale: (val: number) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
@@ -189,12 +191,15 @@ const ThemeContext = createContext<ThemeContextType>({
   setAnimations: () => {},
   particleMode: 'nodes',
   setParticleMode: () => {},
+  fontScale: 1,
+  applyFontScale: () => {},
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [activeProfile, setActiveProfile] = useState<ColorProfile>(COLOR_PROFILES[0]);
   const [animations, setAnimationsState] = useState(true);
   const [particleMode, setParticleModeState] = useState<string>('nodes');
+  const [fontScale, setFontScaleState] = useState(1);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('portfolio-nontech-theme');
@@ -217,6 +222,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     if (savedParticle) {
       setParticleModeState(savedParticle);
     }
+
+    const savedFontScale = localStorage.getItem('portfolio-nontech-font-scale');
+    if (savedFontScale !== null) {
+      const parsed = parseFloat(savedFontScale);
+      const clamped = Math.max(0.7, Math.min(1.6, parsed));
+      setFontScaleState(clamped);
+      document.documentElement.style.setProperty('--font-scale', clamped.toString());
+    }
   }, []);
 
   const setAnimations = useCallback((val: boolean) => {
@@ -228,6 +241,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const setParticleMode = useCallback((mode: string) => {
     setParticleModeState(mode);
     localStorage.setItem('portfolio-nontech-particles', mode);
+  }, []);
+
+  const applyFontScale = useCallback((val: number) => {
+    const clamped = Math.max(0.7, Math.min(1.6, val));
+    setFontScaleState(clamped);
+    localStorage.setItem('portfolio-nontech-font-scale', clamped.toString());
+    document.documentElement.style.setProperty('--font-scale', clamped.toString());
   }, []);
 
   const applyTheme = useCallback((profile: ColorProfile) => {
@@ -247,7 +267,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [applyTheme]);
 
   return (
-    <ThemeContext.Provider value={{ activeProfile, setProfile, animations, setAnimations, particleMode, setParticleMode }}>
+    <ThemeContext.Provider value={{ activeProfile, setProfile, animations, setAnimations, particleMode, setParticleMode, fontScale, applyFontScale }}>
       {children}
     </ThemeContext.Provider>
   );

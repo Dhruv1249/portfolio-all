@@ -18,8 +18,9 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
+  const [pendingFontScale, setPendingFontScale] = useState(1);
   const themeRef = useRef<HTMLDivElement>(null);
-  const { activeProfile, setProfile, animations, setAnimations, particleMode, setParticleMode } = useTheme();
+  const { activeProfile, setProfile, animations, setAnimations, particleMode, setParticleMode, fontScale, applyFontScale } = useTheme();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -37,6 +38,10 @@ export default function Navbar() {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  useEffect(() => {
+    setPendingFontScale(fontScale);
+  }, [fontScale]);
 
   return (
     <motion.nav
@@ -197,6 +202,54 @@ export default function Navbar() {
                           }}
                         />
                       </div>
+                    </div>
+
+                    <div style={{ height: "1px", background: "var(--border-subtle)", margin: "8px 0" }} />
+                    <p style={{ fontSize: "0.75rem", letterSpacing: "0.05em", color: "var(--text-muted)", marginBottom: "0.5rem", padding: "0 0.25rem" }}>
+                      Global Font Size
+                    </p>
+                    <div style={{ padding: "6px 4px 10px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                        <span style={{ fontSize: "12px", color: "var(--text-secondary)" }}>Scale</span>
+                        <span style={{ fontSize: "12px", color: "var(--accent)", fontFamily: "monospace", fontWeight: 600 }}>
+                          {Math.round(pendingFontScale * 100)}%
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min="70"
+                        max="160"
+                        value={Math.round(pendingFontScale * 100)}
+                        onChange={(e) => setPendingFontScale(parseInt(e.target.value, 10) / 100)}
+                        style={{
+                          width: "100%",
+                          height: "6px",
+                          WebkitAppearance: "none",
+                          appearance: "none",
+                          background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${((pendingFontScale - 0.7) / 0.9) * 100}%, var(--bg-card-solid) ${((pendingFontScale - 0.7) / 0.9) * 100}%, var(--bg-card-solid) 100%)`,
+                          borderRadius: "999px",
+                          outline: "none",
+                          cursor: "pointer",
+                          marginBottom: "10px",
+                        }}
+                      />
+                      <button
+                        onClick={() => applyFontScale(pendingFontScale)}
+                        disabled={Math.abs(pendingFontScale - fontScale) < 0.005}
+                        style={{
+                          width: "100%",
+                          borderRadius: "10px",
+                          padding: "8px 10px",
+                          border: `1px solid ${Math.abs(pendingFontScale - fontScale) < 0.005 ? "var(--border-subtle)" : "var(--accent)"}`,
+                          background: Math.abs(pendingFontScale - fontScale) < 0.005 ? "transparent" : "var(--accent-dim)",
+                          color: Math.abs(pendingFontScale - fontScale) < 0.005 ? "var(--text-muted)" : "var(--accent)",
+                          fontSize: "12px",
+                          fontWeight: 600,
+                          cursor: Math.abs(pendingFontScale - fontScale) < 0.005 ? "not-allowed" : "pointer",
+                        }}
+                      >
+                        Apply
+                      </button>
                     </div>
                     
                     <div style={{ height: "1px", background: "var(--border-subtle)", margin: "8px 0" }} />
@@ -361,6 +414,51 @@ export default function Navbar() {
                 </div>
 
                 <div style={{ marginTop: "16px" }}>
+                  <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "12px" }}>
+                    Font Size
+                  </p>
+                  <div style={{ display: "grid", gap: "10px", marginBottom: "14px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: "12px", color: "var(--text-secondary)" }}>Global Scale</span>
+                      <span style={{ fontSize: "12px", color: "var(--accent)", fontWeight: 600, fontFamily: "monospace" }}>
+                        {Math.round(pendingFontScale * 100)}%
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="70"
+                      max="160"
+                      value={Math.round(pendingFontScale * 100)}
+                      onChange={(e) => setPendingFontScale(parseInt(e.target.value, 10) / 100)}
+                      style={{
+                        width: "100%",
+                        height: "6px",
+                        WebkitAppearance: "none",
+                        appearance: "none",
+                        background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${((pendingFontScale - 0.7) / 0.9) * 100}%, var(--bg-card-solid) ${((pendingFontScale - 0.7) / 0.9) * 100}%, var(--bg-card-solid) 100%)`,
+                        borderRadius: "999px",
+                        outline: "none",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <button
+                      onClick={() => applyFontScale(pendingFontScale)}
+                      disabled={Math.abs(pendingFontScale - fontScale) < 0.005}
+                      style={{
+                        borderRadius: "8px",
+                        padding: "8px",
+                        border: `1px solid ${Math.abs(pendingFontScale - fontScale) < 0.005 ? "var(--border-subtle)" : "var(--accent)"}`,
+                        background: Math.abs(pendingFontScale - fontScale) < 0.005 ? "rgba(255,255,255,0.03)" : "var(--accent-dim)",
+                        color: Math.abs(pendingFontScale - fontScale) < 0.005 ? "var(--text-muted)" : "var(--accent)",
+                        fontSize: "12px",
+                        fontWeight: 600,
+                        cursor: Math.abs(pendingFontScale - fontScale) < 0.005 ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      Apply
+                    </button>
+                  </div>
+
                   <p style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "12px" }}>
                     Particles
                   </p>
