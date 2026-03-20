@@ -440,7 +440,7 @@ export default function ParticleBackground({ mode = 'none' }: ParticleBackground
     return (
       <div style={{ position: 'fixed', inset: 0, zIndex: -1, pointerEvents: 'none' }}>
         <div style={{ pointerEvents: 'auto', width: '100vw', height: '100vh' }}>
-          <Threads color={getAccentColor()} amplitude={1} distance={0} />
+          <Threads color={getAccentColor()} amplitude={1} distance={0} enableMouseInteraction />
         </div>
       </div>
     );
