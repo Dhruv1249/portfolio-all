@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
+import { PortfolioDataProvider } from "./contexts/PortfolioDataContext";
 import Navbar from "./components/Navbar";
 import ParticleBackground from "./components/ParticleBackground";
 import TerminalLoader from "./components/TerminalLoader";
@@ -22,7 +23,6 @@ import AchievementsSection from "./sections/AchievementsSection";
 import ContactSection from "./sections/ContactSection";
 
 function PageContent() {
-  const [dbReady, setDbReady] = useState(false);
   const [minCycleDone, setMinCycleDone] = useState(false);
 
   useEffect(() => {
@@ -31,26 +31,12 @@ function PageContent() {
       setMinCycleDone(true);
     }, MIN_ANIMATION_MS);
 
-    const fetchData = async () => {
-      try {
-        // Fetch portfolio data from MongoDB
-        const response = await fetch("/api/portfolio-data");
-        if (!response.ok) throw new Error("Failed to fetch data");
-      } catch (error) {
-        console.error("Error fetching portfolio data:", error);
-      } finally {
-        setDbReady(true);
-      }
-    };
-
-    fetchData();
-
     return () => {
       window.clearTimeout(timer);
     };
   }, []);
 
-  const isLoading = !(dbReady && minCycleDone);
+  const isLoading = !minCycleDone;
 
   return (
     <>
@@ -89,7 +75,9 @@ function PageContent() {
 export default function Home() {
   return (
     <ThemeProvider>
-      <PageContent />
+      <PortfolioDataProvider>
+        <PageContent />
+      </PortfolioDataProvider>
     </ThemeProvider>
   );
 }

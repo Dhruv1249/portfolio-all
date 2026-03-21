@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '@/app/lib/mongodb';
+import { FALLBACK_PORTFOLIO_DATA } from '@/app/data/portfolio-data';
 
 const DB_NAME = 'portfolio';
 const COLLECTION_NAME = 'portfolio_data';
@@ -19,15 +20,13 @@ export async function GET() {
     const data = await collection.findOne({ _id: 'portfolio_main' });
 
     if (!data) {
-      // If no data in DB, return success with empty state
-      // (frontend will use static data from portfolio-data.ts as fallback)
-      return NextResponse.json({ success: true, cached: false });
+      return NextResponse.json({ success: true, data: FALLBACK_PORTFOLIO_DATA, source: 'fallback' });
     }
 
-    return NextResponse.json({ success: true, data, cached: true });
+    const { _id, ...portfolioData } = data;
+    return NextResponse.json({ success: true, data: portfolioData, source: 'mongodb' });
   } catch (error) {
     console.error('MongoDB portfolio data fetch error:', error);
-    // Return success anyway so page loads - frontend has fallback static data
-    return NextResponse.json({ success: true, cached: false });
+    return NextResponse.json({ success: true, data: FALLBACK_PORTFOLIO_DATA, source: 'fallback' });
   }
 }

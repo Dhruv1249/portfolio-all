@@ -2,13 +2,16 @@
 
 import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
-import { aboutText, engineeringFocus } from "../data/portfolio-data";
+import { usePortfolioData } from "../contexts/PortfolioDataContext";
 import { Code2, Cloud, Brain, Terminal, ArrowUpRight } from "lucide-react";
 
 const focusIcons = [<Code2 key="code" size={22} />, <Cloud key="cloud" size={22} />, <Brain key="brain" size={22} />];
 
 
 export default function AboutSection() {
+  const { data } = usePortfolioData();
+  const { aboutText, engineeringFocus } = data;
+
   return (
     <section id="about" className="section-padding max-w-7xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">

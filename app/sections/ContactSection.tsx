@@ -3,16 +3,19 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
-import { personalInfo } from "../data/portfolio-data";
+import { usePortfolioData } from "../contexts/PortfolioDataContext";
 import { Mail, Github, Linkedin, Send, ArrowUpRight, CheckCircle, AlertCircle } from "lucide-react";
 
-const socialLinks = [
-  { icon: <Mail size={20} />, label: "Email", href: `mailto:${personalInfo.email}`, display: personalInfo.email },
-  { icon: <Github size={20} />, label: "GitHub", href: personalInfo.github, display: "Dhruv1249" },
-  { icon: <Linkedin size={20} />, label: "LinkedIn", href: personalInfo.linkedin, display: "dhruv-ds" },
-];
-
 export default function ContactSection() {
+  const { data } = usePortfolioData();
+  const { personalInfo } = data;
+
+  const socialLinks = [
+    { icon: <Mail size={20} />, label: "Email", href: `mailto:${personalInfo.email}`, display: personalInfo.email },
+    { icon: <Github size={20} />, label: "GitHub", href: personalInfo.github, display: "Dhruv1249" },
+    { icon: <Linkedin size={20} />, label: "LinkedIn", href: personalInfo.linkedin, display: "dhruv-ds" },
+  ];
+
   const [formData, setFormData] = useState({ from_name: "", from_email: "", message: "" });
   const [sending, setSending] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");

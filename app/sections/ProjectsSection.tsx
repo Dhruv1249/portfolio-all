@@ -3,11 +3,14 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
-import { featuredProjects, additionalProjects } from "../data/portfolio-data";
+import { usePortfolioData } from "../contexts/PortfolioDataContext";
 import { ArrowUpRight, Github, ExternalLink, Calendar } from "lucide-react";
 import TiltedCard from "../components/ui/TiltedCard";
 
 export default function ProjectsSection() {
+  const { data } = usePortfolioData();
+  const { featuredProjects, additionalProjects } = data;
+
   return (
     <section id="projects" className="section-padding max-w-7xl mx-auto">
       <AnimateOnScroll>

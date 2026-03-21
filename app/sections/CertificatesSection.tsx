@@ -2,11 +2,14 @@
 
 import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
-import { certifications } from "../data/portfolio-data";
+import { usePortfolioData } from "../contexts/PortfolioDataContext";
 import { Award, ExternalLink } from "lucide-react";
 import Image from "next/image";
 
 export default function CertificatesSection() {
+  const { data } = usePortfolioData();
+  const { certifications } = data;
+
   return (
     <section id="certificates" className="section-padding max-w-7xl mx-auto">
       <AnimateOnScroll>

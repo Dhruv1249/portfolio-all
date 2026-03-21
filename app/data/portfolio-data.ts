@@ -1,6 +1,6 @@
 // ─── Portfolio Data ─────────────────────────────────────────────────────────
 
-export const personalInfo = {
+const personalInfo = {
   name: "Dhruv",
   roles: ["Full-Stack Developer", "DevOps Enthusiast", "ML Engineer"],
   tagline:
@@ -12,11 +12,11 @@ export const personalInfo = {
   resume: "https://drive.google.com/uc?export=download&id=1o-ec9gvMQjyXs09q_XlcKj9pg4hgCIqx",
 };
 
-export const aboutText =
+const aboutText =
   `Computer Science undergraduate at Lovely Professional University with a focus on building end-to-end intelligent systems.\n
 I enjoy working across the stack — from data ingestion and ML pipelines to backend services and production deployment. My work focuses on turning raw data into scalable, real-world applications.`;
 
-export const engineeringFocus = [
+const engineeringFocus = [
   {
     title: "Full-Stack Development",
     short: "React • Next.js • Node.js • TypeScript • MongoDB",
@@ -44,7 +44,7 @@ export interface Project {
   period?: string;
 }
 
-export const featuredProjects: Project[] = [
+const featuredProjects: Project[] = [
   {
     title: "CALYX",
     subtitle: "Global Phenology Forecasting",
@@ -93,7 +93,7 @@ export interface AdditionalProject {
   period?: string;
 }
 
-export const additionalProjects: AdditionalProject[] = [
+const additionalProjects: AdditionalProject[] = [
   {
     title: "Expense Tracker",
     short: "MERN-stack financial management with interactive dashboards",
@@ -111,7 +111,7 @@ export const additionalProjects: AdditionalProject[] = [
   },
 ];
 
-export const skills = {
+const skills = {
   languages: ["Python", "TypeScript", "JavaScript", "C", "C++"],
   frontend: ["React", "Next.js", "Tailwind CSS", "HTML", "CSS"],
   backend: ["Node.js", "FastAPI", "REST APIs"],
@@ -119,7 +119,7 @@ export const skills = {
   cloud: ["Docker", "GCP", "Firebase", "Git", "GitHub"],
 };
 
-export const allTechNames = [
+const allTechNames = [
   "React",
   "Next.js",
   "TypeScript",
@@ -137,7 +137,7 @@ export const allTechNames = [
   "Machine Learning",
 ];
 
-export const experience = {
+const experience = {
   role: "Freelance Full-Stack Developer",
   company: "Remote",
   period: "Nov '25 — Present",
@@ -150,7 +150,7 @@ export const experience = {
   tech: ["Next.js", "Tailwind CSS", "Firebase", "NodeMailer", "Google Sheets API", "SEO"],
 };
 
-export const education = [
+const education = [
   {
     institution: "Lovely Professional University",
     location: "Punjab, India",
@@ -174,7 +174,7 @@ export const education = [
   },
 ];
 
-export const achievements = [
+const achievements = [
   {
     title: "NASA Space Apps Challenge",
     award: "Global Honorable Mention",
@@ -191,7 +191,7 @@ export const achievements = [
   },
 ];
 
-export const certifications = [
+const certifications = [
   {
     title: "Cloud Computing",
     issuer: "NPTEL",
@@ -207,3 +207,45 @@ export const certifications = [
     period: "Apr '25",
   },
 ];
+
+export interface PortfolioData {
+  personalInfo: typeof personalInfo;
+  aboutText: typeof aboutText;
+  engineeringFocus: typeof engineeringFocus;
+  featuredProjects: Project[];
+  additionalProjects: AdditionalProject[];
+  skills: typeof skills;
+  allTechNames: typeof allTechNames;
+  experience: typeof experience;
+  education: typeof education;
+  achievements: typeof achievements;
+  certifications: typeof certifications;
+}
+
+export const FALLBACK_PORTFOLIO_DATA: PortfolioData = {
+  personalInfo,
+  aboutText,
+  engineeringFocus,
+  featuredProjects,
+  additionalProjects,
+  skills,
+  allTechNames,
+  experience,
+  education,
+  achievements,
+  certifications,
+};
+
+export {
+  personalInfo,
+  aboutText,
+  engineeringFocus,
+  featuredProjects,
+  additionalProjects,
+  skills,
+  allTechNames,
+  experience,
+  education,
+  achievements,
+  certifications,
+};

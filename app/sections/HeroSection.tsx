@@ -3,10 +3,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, FileText } from "lucide-react";
-import { personalInfo } from "../data/portfolio-data";
+import { usePortfolioData } from "../contexts/PortfolioDataContext";
 import Image from "next/image";
 
 export default function HeroSection() {
+  const { data } = usePortfolioData();
+  const { personalInfo } = data;
   const [photoVisible, setPhotoVisible] = useState<boolean | null>(null);
 
   useEffect(() => {

@@ -2,10 +2,13 @@
 
 import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
-import { education } from "../data/portfolio-data";
+import { usePortfolioData } from "../contexts/PortfolioDataContext";
 import { GraduationCap, MapPin } from "lucide-react";
 
 export default function EducationSection() {
+  const { data } = usePortfolioData();
+  const { education } = data;
+
   return (
     <section id="education" className="section-padding max-w-7xl mx-auto">
       <AnimateOnScroll>

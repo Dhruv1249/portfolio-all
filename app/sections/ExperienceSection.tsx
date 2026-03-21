@@ -2,10 +2,13 @@
 
 import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
-import { experience } from "../data/portfolio-data";
+import { usePortfolioData } from "../contexts/PortfolioDataContext";
 import { Briefcase, Calendar, MapPin } from "lucide-react";
 
 export default function ExperienceSection() {
+  const { data } = usePortfolioData();
+  const { experience } = data;
+
   return (
     <section id="experience" className="section-padding max-w-7xl mx-auto">
       <AnimateOnScroll>

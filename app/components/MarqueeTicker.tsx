@@ -1,8 +1,10 @@
 "use client";
 
-import { allTechNames } from "../data/portfolio-data";
+import { usePortfolioData } from "../contexts/PortfolioDataContext";
 
 export default function MarqueeTicker() {
+  const { data } = usePortfolioData();
+  const { allTechNames } = data;
   const doubled = [...allTechNames, ...allTechNames];
 
   return (

@@ -3,8 +3,8 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, FileText, Palette, Check, ChevronDown, Terminal, Zap } from "lucide-react";
-import { personalInfo } from "../data/portfolio-data";
 import { useTheme, COLOR_PROFILES } from "../contexts/ThemeContext";
+import { usePortfolioData } from "../contexts/PortfolioDataContext";
 
 const navLinks = [
   { label: "Projects", href: "#projects" },
@@ -17,10 +17,12 @@ const navLinks = [
 
 const desktopItems = [
   ...navLinks,
-  { label: "Resume", href: personalInfo.resume, download: "Dhruv_Resume.pdf" },
+  { label: "Resume", href: "#", download: "Dhruv_Resume.pdf" },
 ];
 
 export default function Navbar() {
+  const { data } = usePortfolioData();
+
   const FONT_MIN = 70;
   const FONT_MAX = 160;
   const DESKTOP_NAV_START_OFFSET = 160;
@@ -46,8 +48,13 @@ export default function Navbar() {
 
   const { activeProfile, setProfile, animations, setAnimations, particleMode, setParticleMode, fontScale, applyFontScale } = useTheme();
 
-  const visibleItems = desktopItems.slice(0, visibleCount);
-  const overflowItems = desktopItems.slice(visibleCount);
+  const navItems = [
+    ...navLinks,
+    { label: "Resume", href: data.personalInfo.resume, download: "Dhruv_Resume.pdf" },
+  ];
+
+  const visibleItems = navItems.slice(0, visibleCount);
+  const overflowItems = navItems.slice(visibleCount);
 
   useEffect(() => {
     if (overflowItems.length === 0 && moreOpen) {
@@ -89,9 +96,9 @@ export default function Navbar() {
       rafIdRef.current = null;
 
       if (!window.matchMedia("(min-width: 768px)").matches) {
-        if (visibleCountRef.current !== desktopItems.length) {
-          visibleCountRef.current = desktopItems.length;
-          setVisibleCount(desktopItems.length);
+        if (visibleCountRef.current !== navItems.length) {
+          visibleCountRef.current = navItems.length;
+          setVisibleCount(navItems.length);
         }
         return;
       }
@@ -107,7 +114,7 @@ export default function Navbar() {
         0,
         controlsRect.left - logoRect.right - MIN_GAP * 2 - DESKTOP_NAV_START_OFFSET,
       );
-      const itemWidths = desktopItems.map((item, i) => {
+      const itemWidths = navItems.map((item, i) => {
         const labelWidth = measureRefs.current[i]?.offsetWidth ?? 92;
         return labelWidth + (item.label === "Resume" ? 22 : 0);
       });
@@ -123,7 +130,7 @@ export default function Navbar() {
           width += (count - 1) * itemGap;
         }
 
-        if (count < desktopItems.length) {
+        if (count < navItems.length) {
           width += moreButtonWidth + (count > 0 ? itemGap : 0);
         }
 
@@ -131,7 +138,7 @@ export default function Navbar() {
       };
 
       let targetCount = 0;
-      for (let count = 0; count <= desktopItems.length; count += 1) {
+      for (let count = 0; count <= navItems.length; count += 1) {
         if (widthForCount(count) <= availableWidth) {
           targetCount = count;
         } else {
@@ -168,7 +175,7 @@ export default function Navbar() {
         rafIdRef.current = null;
       }
     };
-  }, [fontScale, DESKTOP_NAV_START_OFFSET]);
+  }, [fontScale, DESKTOP_NAV_START_OFFSET, navItems]);
 
   return (
     <motion.nav
@@ -193,7 +200,7 @@ export default function Navbar() {
           whiteSpace: "nowrap",
         }}
       >
-        {desktopItems.map((item, i) => (
+        {navItems.map((item, i) => (
           <span
             key={`measure-${item.label}`}
             ref={(el) => {
@@ -733,7 +740,7 @@ export default function Navbar() {
                 </motion.a>
               ))}
               <motion.a
-                href={personalInfo.resume}
+                href={data.personalInfo.resume}
                 download="Dhruv_Resume.pdf"
                 onClick={() => setMobileOpen(false)}
                 initial={{ opacity: 0, x: -20 }}

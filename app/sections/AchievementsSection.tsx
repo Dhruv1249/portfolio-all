@@ -2,10 +2,13 @@
 
 import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
-import { achievements } from "../data/portfolio-data";
+import { usePortfolioData } from "../contexts/PortfolioDataContext";
 import { Trophy, Award, Calendar } from "lucide-react";
 
 export default function AchievementsSection() {
+  const { data } = usePortfolioData();
+  const { achievements } = data;
+
   return (
     <section id="achievements" className="section-padding max-w-7xl mx-auto">
       <AnimateOnScroll>
