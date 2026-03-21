@@ -38,22 +38,22 @@ export default function TechPortfolioSection() {
               
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] mb-3 tracking-tight">
-                  Into tech stuff?
+                  Into deep tech experiences?
                 </h3>
                 <p className="text-[var(--text-secondary)] text-lg max-w-xl mx-auto leading-relaxed">
-                  I also built a portfolio that looks like a Linux desktop — with a terminal, draggable windows, and everything. Made for the techy crowd, check it out if you&apos;re into that!
+                  I also built an OS-style portfolio with terminal commands and layered interactions, mostly to show my creativity. It&apos;s intentionally time-consuming, so open it only when you have a few extra minutes to explore.
                 </p>
               </div>
 
               <div className="flex items-center gap-3 sm:gap-4 text-[var(--accent)] font-medium mt-4 bg-[var(--accent-dim)] px-5 sm:px-6 py-3 rounded-xl border border-[var(--accent-glow)] group-hover:bg-[var(--accent)] group-hover:text-[var(--bg-primary)] transition-all duration-300">
-                <span>Boot System</span>
+                <span>Open If You Have Time</span>
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </div>
 
               <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mt-6 opacity-60">
                 <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]"><Code size={16} /> React</div>
                 <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]"><Monitor size={16} /> OS UI</div>
-                <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]"><Cpu size={16} /> CLI</div>
+                <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]"><Cpu size={16} /> Time-Heavy</div>
               </div>
             </div>
           </div>
