@@ -4,11 +4,16 @@ import clientPromise from '@/app/lib/mongodb';
 const DB_NAME = 'portfolio';
 const COLLECTION_NAME = 'portfolio_data';
 
+interface PortfolioDataDoc {
+  _id: string;
+  [key: string]: unknown;
+}
+
 export async function GET() {
   try {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
-    const collection = db.collection(COLLECTION_NAME);
+    const collection = db.collection<PortfolioDataDoc>(COLLECTION_NAME);
 
     // Fetch portfolio data from MongoDB
     const data = await collection.findOne({ _id: 'portfolio_main' });
