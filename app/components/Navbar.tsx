@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, FileText, Palette, Check, ChevronDown } from "lucide-react";
+import { Menu, X, FileText, Palette, Check, ChevronDown, Terminal, Zap } from "lucide-react";
 import { personalInfo } from "../data/portfolio-data";
 import { useTheme, COLOR_PROFILES } from "../contexts/ThemeContext";
 
@@ -22,6 +22,7 @@ const desktopItems = [
 export default function Navbar() {
   const FONT_MIN = 70;
   const FONT_MAX = 160;
+  const DESKTOP_NAV_START_OFFSET = 160;
 
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -38,6 +39,7 @@ export default function Navbar() {
   const themeRef = useRef<HTMLDivElement>(null);
   const moreRef = useRef<HTMLDivElement>(null);
   const measureRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const moreMeasureRef = useRef<HTMLSpanElement>(null);
   const visibleCountRef = useRef(visibleCount);
   const rafIdRef = useRef<number | null>(null);
 
@@ -81,7 +83,6 @@ export default function Navbar() {
 
   useLayoutEffect(() => {
     const MIN_GAP = 24;
-    const HYSTERESIS = 8;
 
     const recompute = () => {
       rafIdRef.current = null;
@@ -96,47 +97,50 @@ export default function Navbar() {
 
       if (!logoRef.current || !navItemsRef.current || !controlsRef.current) return;
 
-      const currentCount = visibleCountRef.current;
-
       const logoRect = logoRef.current.getBoundingClientRect();
-      const itemsRect = navItemsRef.current.getBoundingClientRect();
       const controlsRect = controlsRef.current.getBoundingClientRect();
       const itemGap = parseFloat(getComputedStyle(navItemsRef.current).gap || "24");
+      const moreButtonWidth = (moreMeasureRef.current?.offsetWidth ?? 52) + 18;
 
-      const leftGap = itemsRect.left - logoRect.right;
-      const rightGap = controlsRect.left - itemsRect.right;
+      const availableWidth = Math.max(
+        0,
+        controlsRect.left - logoRect.right - MIN_GAP * 2 - DESKTOP_NAV_START_OFFSET,
+      );
+      const itemWidths = desktopItems.map((item, i) => {
+        const labelWidth = measureRefs.current[i]?.offsetWidth ?? 92;
+        return labelWidth + (item.label === "Resume" ? 22 : 0);
+      });
 
-      // If nav items get too close to logo OR controls, move one item into More.
-      if ((leftGap < MIN_GAP || rightGap < MIN_GAP) && currentCount > 0) {
-        setVisibleCount((count) => {
-          const next = Math.max(0, count - 1);
-          visibleCountRef.current = next;
-          return next;
-        });
-        return;
-      }
+      const widthForCount = (count: number) => {
+        let width = 0;
 
-      // If there is safe extra room on both sides, bring one item back out of More.
-      if (
-        leftGap > MIN_GAP + HYSTERESIS &&
-        rightGap > MIN_GAP + HYSTERESIS &&
-        currentCount < desktopItems.length
-      ) {
-        const nextItem = desktopItems[currentCount];
-        const nextLabelWidth = measureRefs.current[currentCount]?.offsetWidth ?? 92;
-        const nextItemWidth = nextLabelWidth + (nextItem?.label === "Resume" ? 22 : 0);
-        const requiredLeftGap = nextItemWidth + itemGap + MIN_GAP;
-
-        if (leftGap <= requiredLeftGap) {
-          return;
+        for (let i = 0; i < count; i += 1) {
+          width += itemWidths[i];
         }
 
-        setVisibleCount((count) => {
-          const next = Math.min(desktopItems.length, count + 1);
-          visibleCountRef.current = next;
-          return next;
-        });
-        return;
+        if (count > 1) {
+          width += (count - 1) * itemGap;
+        }
+
+        if (count < desktopItems.length) {
+          width += moreButtonWidth + (count > 0 ? itemGap : 0);
+        }
+
+        return width;
+      };
+
+      let targetCount = 0;
+      for (let count = 0; count <= desktopItems.length; count += 1) {
+        if (widthForCount(count) <= availableWidth) {
+          targetCount = count;
+        } else {
+          break;
+        }
+      }
+
+      if (targetCount !== visibleCountRef.current) {
+        visibleCountRef.current = targetCount;
+        setVisibleCount(targetCount);
       }
     };
 
@@ -163,7 +167,7 @@ export default function Navbar() {
         rafIdRef.current = null;
       }
     };
-  }, [fontScale]);
+  }, [fontScale, DESKTOP_NAV_START_OFFSET]);
 
   return (
     <motion.nav
@@ -199,6 +203,12 @@ export default function Navbar() {
             {item.label}
           </span>
         ))}
+        <span
+          ref={moreMeasureRef}
+          style={{ fontSize: "1rem", fontWeight: 500 }}
+        >
+          More
+        </span>
       </div>
 
       <div
@@ -210,8 +220,8 @@ export default function Navbar() {
         <a
           ref={logoRef}
           href="#"
-          className="text-2xl font-bold tracking-tight"
-          style={{ color: "var(--text-primary)", fontSize: "1.5rem", whiteSpace: "nowrap", flexShrink: 0 }}
+          className="font-bold tracking-tight"
+          style={{ color: "var(--text-primary)", fontSize: "1.9rem", whiteSpace: "nowrap", flexShrink: 0 }}
         >
           Dhruv<span style={{ color: "var(--accent)" }}>.</span>
         </a>
@@ -220,7 +230,14 @@ export default function Navbar() {
         <div
           ref={desktopNavRowRef}
           className="hidden md:flex items-center"
-          style={{ flex: 1, justifyContent: "flex-end", gap: "1.5rem", minWidth: 0, overflow: "visible" }}
+          style={{
+            flex: 1,
+            justifyContent: "flex-end",
+            gap: "1.5rem",
+            minWidth: 0,
+            overflow: "visible",
+            paddingLeft: `${DESKTOP_NAV_START_OFFSET}px`,
+          }}
         >
           <div ref={navItemsRef} style={{ display: "flex", alignItems: "center", gap: "1.5rem", flexShrink: 0 }}>
             {/* Visible nav items */}
@@ -569,6 +586,70 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
 
+            {/* Tech Portfolio */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8 }}
+              style={{ position: "relative" }}
+              className="group"
+            >
+              <motion.a
+                href={process.env.NEXT_PUBLIC_TECH_PORTFOLIO_URL || "https://dhruv-portfolio-os.vercel.app"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold tracking-wide px-4 py-2.5 rounded-xl transition-all duration-300 flex items-center gap-2 relative"
+                style={{
+                  background: "linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%)",
+                  color: "var(--accent)",
+                  border: "1px solid var(--accent-glow)",
+                  whiteSpace: "nowrap",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(139, 92, 246, 0.15) 100%)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(168, 85, 247, 0.25)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              >
+                <Terminal size={16} />
+                <span>Tech Portfolio</span>
+                <Zap size={13} fill="currentColor" />
+              </motion.a>
+
+              {/* Tooltip */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                whileHover={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+                style={{
+                  position: "absolute",
+                  bottom: "100%",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  marginBottom: "8px",
+                  background: "var(--bg-secondary)",
+                  border: "1px solid var(--border-subtle)",
+                  borderRadius: "8px",
+                  padding: "8px 12px",
+                  fontSize: "11px",
+                  color: "var(--text-secondary)",
+                  whiteSpace: "nowrap",
+                  opacity: 0,
+                  pointerEvents: "none",
+                  zIndex: 1000,
+                }}
+                className="group-hover:opacity-100"
+              >
+                Advanced UI — best on desktop
+              </motion.div>
+            </motion.div>
+
             {/* Get in Touch */}
             <motion.a
               href="#contact"
@@ -662,6 +743,47 @@ export default function Navbar() {
               >
                 <FileText size={18} /> Resume
               </motion.a>
+
+              {/* Mobile Action Buttons */}
+              <div style={{ marginTop: "16px", paddingTop: "16px", borderTop: "1px solid var(--border-subtle)", display: "flex", flexDirection: "column", gap: "10px" }}>
+                <motion.a
+                  href={process.env.NEXT_PUBLIC_TECH_PORTFOLIO_URL || "https://dhruv-portfolio-os.vercel.app"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMobileOpen(false)}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navLinks.length + 1) * 0.06 }}
+                  className="text-base font-semibold tracking-wide py-2 inline-flex items-center gap-2 rounded-lg transition-colors"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%)",
+                    color: "var(--accent)",
+                    border: "1px solid var(--accent-glow)",
+                    textDecoration: "none",
+                  }}
+                >
+                  <Terminal size={16} />
+                  <span>Tech Portfolio</span>
+                  <Zap size={13} fill="currentColor" />
+                </motion.a>
+
+                <motion.a
+                  href="#contact"
+                  onClick={() => setMobileOpen(false)}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navLinks.length + 2) * 0.06 }}
+                  className="text-base font-semibold tracking-wide py-2 text-center rounded-lg transition-colors"
+                  style={{
+                    background: "var(--accent-dim)",
+                    color: "var(--accent)",
+                    border: "1px solid var(--accent-glow)",
+                    textDecoration: "none",
+                  }}
+                >
+                  Get in Touch
+                </motion.a>
+              </div>
 
               {/* Mobile Theme Selector */}
               <div style={{ marginTop: "8px", paddingTop: "16px", borderTop: "1px solid var(--border-subtle)" }}>

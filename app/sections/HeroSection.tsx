@@ -52,7 +52,7 @@ export default function HeroSection() {
 
       {/* Hero content — text left (or centered), photo right */}
       {photoVisible !== null && (
-        <div className={`relative z-10 w-full flex flex-col-reverse md:flex-row items-center gap-10 md:gap-20 ${photoVisible ? 'max-w-6xl' : 'max-w-4xl justify-center'}`}>
+        <div className={`relative z-10 w-full -translate-y-4 md:-translate-y-8 flex flex-col-reverse md:flex-row items-center gap-10 md:gap-20 ${photoVisible ? 'max-w-6xl' : 'max-w-4xl justify-center'}`}>
         {/* Text Column */}
         <div className={`flex-1 ${photoVisible ? 'text-center md:text-left' : 'text-center flex flex-col items-center'}`}>
           <motion.div
