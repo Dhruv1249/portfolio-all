@@ -17,7 +17,7 @@ const navLinks = [
 
 const desktopItems = [
   ...navLinks,
-  { label: "Resume", href: "#", download: "Dhruv_Resume.pdf" },
+  { label: "Resume", href: "#" },
 ];
 
 export default function Navbar() {
@@ -50,7 +50,7 @@ export default function Navbar() {
 
   const navItems = [
     ...navLinks,
-    { label: "Resume", href: data.personalInfo.resume, download: "Dhruv_Resume.pdf" },
+    { label: "Resume", href: data.personalInfo.resume },
   ];
 
   const visibleItems = navItems.slice(0, visibleCount);
@@ -253,7 +253,8 @@ export default function Navbar() {
               <motion.a
                 key={item.href}
                 href={item.href}
-                download={item.label === "Resume" ? "Dhruv_Resume.pdf" : undefined}
+                target={item.label === "Resume" ? "_blank" : undefined}
+                rel={item.label === "Resume" ? "noopener noreferrer" : undefined}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + i * 0.08 }}
@@ -318,7 +319,8 @@ export default function Navbar() {
                         <a
                           key={item.href}
                           href={item.href}
-                          download={item.label === "Resume" ? "Dhruv_Resume.pdf" : undefined}
+                          target={item.label === "Resume" ? "_blank" : undefined}
+                          rel={item.label === "Resume" ? "noopener noreferrer" : undefined}
                           onClick={() => setMoreOpen(false)}
                           style={{
                             display: "flex",
@@ -741,7 +743,8 @@ export default function Navbar() {
               ))}
               <motion.a
                 href={data.personalInfo.resume}
-                download="Dhruv_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => setMobileOpen(false)}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}

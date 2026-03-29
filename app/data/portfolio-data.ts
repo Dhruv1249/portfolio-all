@@ -9,7 +9,7 @@ const personalInfo = {
   phone: "+91 7876503573",
   github: "https://github.com/Dhruv1249",
   linkedin: "https://linkedin.com/in/dhruv-ds",
-  resume: "https://drive.google.com/uc?export=download&id=1o-ec9gvMQjyXs09q_XlcKj9pg4hgCIqx",
+  resume: "https://drive.google.com/file/d/1o-ec9gvMQjyXs09q_XlcKj9pg4hgCIqx/view?usp=sharing",
 };
 
 const aboutText =
@@ -103,10 +103,10 @@ const additionalProjects: AdditionalProject[] = [
     period: "Jan '26",
   },
   {
-    title: "Neovim Config",
-    short: "Custom dev environment with LSP, plugins & keybindings",
-    tech: ["Lua", "Neovim", "LSP"],
-    github: "https://github.com/Dhruv1249/my-customized-nvim-config",
+    title: "Linux Dotfiles",
+    short: "Personal Linux setup with Neovim config, shell tooling, and workflow automation",
+    tech: ["Linux", "Neovim", "Lua", "Shell"],
+    github: "https://github.com/Dhruv1249/linux-dotfiles",
     period: "Jan '26 — Present",
   },
 ];
@@ -176,18 +176,20 @@ const education = [
 
 const achievements = [
   {
-    title: "NASA Space Apps Challenge",
+    title: "NASA Space Apps Challenge 2025",
     award: "Global Honorable Mention",
-    detail: "One of the top 23 teams worldwide out of 11,000+ submissions",
+    detail: "Recognized among the Top 23 global teams out of 11,500+ submissions",
     icon: "🏆",
     period: "Nov '25",
+    link: "https://www.spaceappschallenge.org/2025/find-a-team/kaalnetra/",
   },
   {
-    title: "Innov-a-thon (NIT Rourkela)",
-    award: "National Top 100",
-    detail: "Competitive hackathon — rapid prototyping & system design",
+    title: "Achievers Award",
+    award: "Lovely Professional University",
+    detail: "Awarded for NASA Space Apps Challenge 2025 global performance",
     icon: "🥇",
-    period: "Oct '25",
+    period: "Nov '25",
+    link: "https://drive.google.com/file/d/1jUvyxd_S2_XL_4Awme9gFDLHbbeuwkiq/view?usp=sharing",
   },
 ];
 

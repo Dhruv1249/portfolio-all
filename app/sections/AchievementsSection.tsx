@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import AnimateOnScroll from "../components/AnimateOnScroll";
 import { usePortfolioData } from "../contexts/PortfolioDataContext";
-import { Trophy, Award, Calendar } from "lucide-react";
+import { Trophy, Award, Calendar, ExternalLink } from "lucide-react";
 
 export default function AchievementsSection() {
   const { data } = usePortfolioData();
@@ -49,6 +49,18 @@ export default function AchievementsSection() {
                   {ach.title}
                 </h4>
                 <p className="text-sm" style={{ color: "var(--text-muted)" }}>{ach.detail}</p>
+                {ach.link && (
+                  <a
+                    href={ach.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium mt-3 transition-colors duration-300 hover:text-[var(--accent)]"
+                    style={{ color: "var(--text-muted)", textDecoration: "none" }}
+                  >
+                    <span>View Proof</span>
+                    <ExternalLink size={12} />
+                  </a>
+                )}
               </div>
             </motion.div>
           </AnimateOnScroll>
