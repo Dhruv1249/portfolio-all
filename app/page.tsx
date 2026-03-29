@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
-import { PortfolioDataProvider } from "./contexts/PortfolioDataContext";
+import { PortfolioDataProvider, usePortfolioData } from "./contexts/PortfolioDataContext";
 import Navbar from "./components/Navbar";
 import ParticleBackground from "./components/ParticleBackground";
 import TerminalLoader from "./components/TerminalLoader";
@@ -23,6 +23,7 @@ import AchievementsSection from "./sections/AchievementsSection";
 import ContactSection from "./sections/ContactSection";
 
 function PageContent() {
+  const { loading: dataLoading } = usePortfolioData();
   const [minCycleDone, setMinCycleDone] = useState(false);
   const [showWelcomeGuide, setShowWelcomeGuide] = useState(false);
 
@@ -38,7 +39,7 @@ function PageContent() {
   }, []);
 
   useEffect(() => {
-    if (!minCycleDone || typeof window === "undefined") return;
+    if (!minCycleDone || dataLoading || typeof window === "undefined") return;
 
     const key = "portfolio-nontech-startup-guide-seen";
     const hasSeenGuide = localStorage.getItem(key) === "true";
@@ -46,7 +47,7 @@ function PageContent() {
     if (!hasSeenGuide) {
       setShowWelcomeGuide(true);
     }
-  }, [minCycleDone]);
+  }, [minCycleDone, dataLoading]);
 
   const dismissWelcomeGuide = () => {
     if (typeof window !== "undefined") {
@@ -55,7 +56,7 @@ function PageContent() {
     setShowWelcomeGuide(false);
   };
 
-  const isLoading = !minCycleDone;
+  const isLoading = !minCycleDone || dataLoading;
 
   return (
     <>
